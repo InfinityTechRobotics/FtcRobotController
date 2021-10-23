@@ -26,7 +26,7 @@ public class Robot {
         // Initialize drive motors
         frontLeft = hardwareMap.get(DcMotor.class, "lf");
         frontRight = hardwareMap.get(DcMotor.class, "rf");
-        backLeft = hardwareMap.get(DcMotor.class, "lf");
+        backLeft = hardwareMap.get(DcMotor.class, "lr");
         backRight = hardwareMap.get(DcMotor.class, "rr");
 
         // TODO might need to fix this . . .
