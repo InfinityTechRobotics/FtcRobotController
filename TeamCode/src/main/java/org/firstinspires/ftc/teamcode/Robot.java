@@ -17,10 +17,10 @@ public class Robot {
     public void init(HardwareMap hardwareMap) {
 
         // Initialize Actuators
-        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
-        frontRight = hardwareMap.get(DcMotor.class, "frontRight");
-        backLeft = hardwareMap.get(DcMotor.class, "backLeft");
-        backRight = hardwareMap.get(DcMotor.class, "backRight");
+        frontLeft = hardwareMap.get(DcMotor.class, "lf");
+        frontRight = hardwareMap.get(DcMotor.class, "rf");
+        backLeft = hardwareMap.get(DcMotor.class, "lf");
+        backRight = hardwareMap.get(DcMotor.class, "rr");
 
         // TODO might need to fix this . . .
         frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
