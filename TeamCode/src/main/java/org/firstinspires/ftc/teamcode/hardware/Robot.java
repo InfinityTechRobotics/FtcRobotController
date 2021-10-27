@@ -18,6 +18,11 @@ import java.util.function.BooleanSupplier;
 
 public class Robot {
 
+    // Declare Constants
+    public static final double DUMP_POSITION = 1.0d; // TODO check this . . .
+    public static final double UNDUMP_POSITION = 0d; // TODO check this . . .
+    public static final double INTAKE_POWER = 0.5d;
+
     // Declare Actuators
     private DcMotor frontLeft = null;
     private DcMotor frontRight = null;
@@ -101,45 +106,36 @@ public class Robot {
 
     }
 
-    public void driveGyro() {
-
+    public void collect() {
+        intake.setPower(INTAKE_POWER);
     }
 
-    public void startIntake() {
-        // TODO may need to correct the direction of the intake motor
-        intake.setDirection(DcMotorSimple.Direction.FORWARD);
-        intake.setPower(0.25);
+    public void eject() {
+        intake.setPower(-INTAKE_POWER);
+    }
+
+    public void setSlidePower(double pwr) {
+        lift.setPower(pwr);
+    }
+
+    public void dump() {
+        deliver.setPosition(DUMP_POSITION);
+    }
+
+    public void unDump() {
+        deliver.setPosition(UNDUMP_POSITION);
+    }
+
+    public void setWOFPower(double pwr) {
+        carousel.setPower(pwr);
     }
 
     public void stopIntake() {
         intake.setPower(0.0);
     }
 
-    public void reverseIntake() {
-        // TODO this needs to be the opposite of the startIntake direction
-        intake.setDirection(DcMotorSimple.Direction.REVERSE);
-        intake.setPower(0.25);
-    }
-
-    public void startLift() {
-        // TODO need to verify this direction is correct
-        lift.setDirection(DcMotorSimple.Direction.FORWARD);
-        lift.setPower(0.5);
-    }
-
     public void stopLift() {
         lift.setPower(0.0);
-    }
-
-    public void reverseLift() {
-        // TODO need to verify this direction is correct.  Must be the opposite of startLift
-        lift.setDirection(DcMotorSimple.Direction.REVERSE);
-        lift.setPower(0.5);
-    }
-
-    public void startCarousel() {
-        carousel.setDirection(DcMotorSimple.Direction.FORWARD);
-        carousel.setPower(0.25);
     }
 
     public void stopCarousel() {

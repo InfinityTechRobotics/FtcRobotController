@@ -2,7 +2,9 @@ package org.firstinspires.ftc.teamcode.hardware;
 
 public class Constants {
 
-    public static final int COUNTS_PER_INCH = 42; // TODO find this number for rev motors
+    public static final int ENCODER_CPR = 1120;
+    public static final double WHEEL_DIAMETER = 3.85823;
+    public static final double COUNTS_PER_INCH = ENCODER_CPR / (WHEEL_DIAMETER * Math.PI);
     public static final double kP = 0.1d;
 
 }
