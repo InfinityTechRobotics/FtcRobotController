@@ -45,8 +45,12 @@ public class MainTeleOpMode extends OpMode {
         /* Intake */
         boolean rb = gamepad2.right_bumper;
         boolean lb = gamepad2.left_bumper;
+        // if right bumper is pressed, rb value = true
         if(rb) robot.collect();
+        // if left bumper is pressed, lb value = true
         if(lb) robot.eject();
+        // if both rb & lb are false, neither bumper is pressed, so stop intake
+        if(!(rb & lb)) robot.stopIntake();
 
         /* Slider */
         double sliderUp = gamepad2.right_trigger;

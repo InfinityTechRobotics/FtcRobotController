@@ -19,9 +19,11 @@ import java.util.function.BooleanSupplier;
 public class Robot {
 
     // Declare Constants
-    public static final double DUMP_POSITION = 1.0d; // TODO check this . . .
-    public static final double UNDUMP_POSITION = 0d; // TODO check this . . .
-    public static final double INTAKE_POWER = 0.5d;
+    public static final double DUMP_POSITION = -0.5d; // TODO check this . . .
+    public static final double UNDUMP_POSITION = 0.0d; // TODO check this . . .
+    public static final double INTAKE_POWER = 0.8d;
+    public static final double CAROUSEL_POWER = 0.25;
+    public static final double LIFT_POWER_SCALE_FACTOR = 1.0;
 
     // Declare Actuators
     private DcMotor frontLeft = null;
@@ -33,6 +35,9 @@ public class Robot {
     private Servo deliver = null;
     private DcMotor carousel = null;
     private IMU imu = null;
+
+    // Declare global variables
+    public long liftPosition = 0;
 
     // Class to represent mecanum motor speed
     public class MecanumMotorSpeed {
@@ -73,9 +78,13 @@ public class Robot {
 
         // TODO initialize lift motor
         lift = hardwareMap.get(DcMotor.class,"lift");
+        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // TODO initialize deliver servo
         deliver = hardwareMap.get(Servo.class, "deliver");
+        // Set the initial position as 0.0d
+        deliver.setPosition(0.0d);
+        // deliver.scaleRange(0.0d, 0.5d);
 
         // TODO initialize carousel motor
         carousel = hardwareMap.get(DcMotor.class, "carousel");
@@ -115,7 +124,7 @@ public class Robot {
     }
 
     public void setSlidePower(double pwr) {
-        lift.setPower(pwr);
+        lift.setPower(LIFT_POWER_SCALE_FACTOR*pwr);
     }
 
     public void dump() {
