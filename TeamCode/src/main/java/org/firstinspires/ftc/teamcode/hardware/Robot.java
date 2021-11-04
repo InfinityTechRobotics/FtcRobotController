@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.hardware;
 
 import android.os.Build;
 
+import androidx.annotation.RequiresApi;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -282,16 +284,84 @@ public class Robot {
     /**
      * returns desired steering force.  +/- 1 range.  +ve = steer left
      * @param error   Error angle in robot relative degrees
-     * @param PCoeff  Proportional Gain Coefficient
+     * @param kP  Proportional Gain Coefficient
      * @return
      */
-    public double getSteer(double error, double PCoeff) {
-        return Range.clip(error * PCoeff, -1, 1);
+    public double getSteer(double error, double kP) {
+        return Range.clip(error * kP, -1, 1);
     }
 
     public double getHeading() {
         // TODO check this . . .
-        return imu.getIMU().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        return imu.getIMU().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
+    }
+
+    /**
+     *  Method to spin on central axis to point in a new direction.
+     *  Move will stop if either of these conditions occur:
+     *  1) Move gets to the heading (angle)
+     *  2) Driver stops the opmode running.
+     *
+     * @param speed Desired speed of turn.
+     * @param angle      Absolute Angle (in Degrees) relative to last gyro reset.
+     *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
+     *                   If a relative angle is required, add/subtract from current heading.
+     */
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void gyroTurn(Telemetry tm, BooleanSupplier omActive, double speed, double angle) {
+
+        // keep looping while we are still active, and not on heading.
+        while (omActive.getAsBoolean() && !onHeading(speed, angle, Constants.kP_TURN, tm)) {
+            // Update telemetry & Allow time for other processes to run.
+            tm.update();
+        }
+
+    }
+
+    /**
+     * Perform one cycle of closed loop heading control.
+     *
+     * @param speed     Desired speed of turn.
+     * @param angle     Absolute Angle (in Degrees) relative to last gyro reset.
+     *                  0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
+     *                  If a relative angle is required, add/subtract from current heading.
+     * @param kP    Proportional Gain coefficient
+     * @return
+     */
+    boolean onHeading(double speed, double angle, double kP, Telemetry tm) {
+        double   error ;
+        double   steer ;
+        boolean  onTarget = false ;
+        double leftSpeed;
+        double rightSpeed;
+
+        // determine turn power based on +/- error
+        error = getError(angle);
+
+        if (Math.abs(error) <= 1) { // heading threshold
+            steer = 0.0;
+            leftSpeed  = 0.0;
+            rightSpeed = 0.0;
+            onTarget = true;
+        }
+        else {
+            steer = getSteer(error, kP);
+            rightSpeed  = speed * steer;
+            leftSpeed   = -rightSpeed;
+        }
+
+        // Send desired speeds to motors.
+        frontRight.setPower(rightSpeed);
+        frontLeft.setPower(leftSpeed);
+        backLeft.setPower(leftSpeed);
+        backRight.setPower(rightSpeed);
+
+        // Display it for the driver.
+        tm.addData("Target", "%5.2f", angle);
+        tm.addData("Err/St", "%5.2f/%5.2f", error, steer);
+        tm.addData("Speed.", "%5.2f:%5.2f", leftSpeed, rightSpeed);
+
+        return onTarget;
     }
 
 }
