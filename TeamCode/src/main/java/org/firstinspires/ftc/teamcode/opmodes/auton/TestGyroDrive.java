@@ -18,7 +18,7 @@ public class TestGyroDrive extends LinearOpMode {
         robot = new Robot();
         robot.init(hardwareMap);
         waitForStart();
-        robot.gyroDrive(telemetry, ()-> opModeIsActive(), 0.5, 10, 0);
+        robot.gyroDrive(telemetry, ()-> opModeIsActive(), 0.25, 10, 0);
         robot.gyroTurn(telemetry, () -> opModeIsActive(), 0.25, Math.PI/2);
     }
 
