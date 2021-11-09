@@ -27,6 +27,7 @@ public class Robot {
     public static final double INTAKE_POWER = 0.8d;
     public static final double CAROUSEL_POWER = 0.25;
     public static final double LIFT_POWER_SCALE_FACTOR = 1.0;
+    public static final double LIFT_POWER = 0.75;
 
     // Declare Actuators
     private DcMotor frontLeft = null;
@@ -162,6 +163,24 @@ public class Robot {
 
     public void stopCarousel() {
         carousel.setPower(0.0);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void moveLiftToPos(Telemetry tm, BooleanSupplier opModeActive, int encCounts) {
+        if (opModeActive.getAsBoolean()) {
+            int targetPos = lift.getCurrentPosition() + encCounts;
+            lift.setTargetPosition(targetPos);
+            lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            while (opModeActive.getAsBoolean() && lift.isBusy()) {
+                lift.setPower(LIFT_POWER);
+            }
+            lift.setPower(0d);
+            lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
+
+    public int getLiftEnc() {
+        return lift.getCurrentPosition();
     }
 
     /**
