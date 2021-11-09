@@ -36,11 +36,27 @@ public class MainTeleOpMode extends OpMode {
         double Y2 = gamepad1.right_stick_y;
         double X = gamepad1.right_stick_x;
         // calculate drive vector from gamepad input
+        // forward is the average of the left and right sticks in the y direction
+        // range is from -1.0 to +1.0
         double forward = -(Y1+Y2)/2;
+        // right, aka strafe, is simply the x value from the right stick
+        // range is from -1.0 to +1.0
         double right = X;
+        // clockwise, aka twist, is the difference between the left and right sticks in the y direction
+        // range is from -1.0 to +1.0
         double clockwise = -(Y1-Y2)/2;
+        // Add telemetry for the raw inputs
+        telemetry.addData("Drive: ", "(%.2f)", forward);
+        telemetry.addData("Strafe: ", "(%.2f)", right);
+        telemetry.addData("Twist: ","(%.2f)",clockwise);
+        // Set a scale factor to reduce the sensitivity of the forward and twist motions
+        double forwardscalefactor = 0.5;
+        double rightscalefactor = 1.0;
+        double clockwisescalefactor = 0.5;
         // Send drive vector to the robot object
-        robot.vector(forward, right, clockwise);
+        robot.vector(forward*forwardscalefactor, right*rightscalefactor, clockwise*clockwisescalefactor);
+        double heading = robot.getHeading();
+        telemetry.addData("Heading: ", heading);
 
         /* Intake */
         boolean rb = gamepad2.right_bumper;

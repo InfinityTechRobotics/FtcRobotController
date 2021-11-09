@@ -38,6 +38,7 @@ public class Robot {
 
     // Declare global variables
     public long liftPosition = 0;
+    public boolean isMoving = false;
 
     // Class to represent mecanum motor speed
     public class MecanumMotorSpeed {
@@ -73,20 +74,20 @@ public class Robot {
         backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        // TODO Initialize intake motor
+        // Initialize intake motor
         intake = hardwareMap.get(DcMotor.class, "intake");
 
-        // TODO initialize lift motor
+        // Initialize lift motor
         lift = hardwareMap.get(DcMotor.class,"lift");
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        // TODO initialize deliver servo
+        // Initialize deliver servo
         deliver = hardwareMap.get(Servo.class, "deliver");
         // Set the initial position as 0.0d
         //deliver.setPosition(0.0d);
         // deliver.scaleRange(0.0d, 0.5d);
 
-        // TODO initialize carousel motor
+        // Initialize carousel motor
         carousel = hardwareMap.get(DcMotor.class, "carousel");
 
         imu = new IMU();
@@ -162,10 +163,10 @@ public class Robot {
      * @param angle      Absolute Angle (in Degrees) relative to last gyro reset.
      *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
      *                   If a relative angle is required, add/subtract from current heading.
+     *
+     *  Note: removed Telemetry tm and BooleanSupplier omActive from list of parameters because I have no idea what these need as inputs
      */
-    public void gyroDrive ( Telemetry tm,
-                            BooleanSupplier omActive,
-                            double speed,
+    public void gyroDrive ( double speed,
                             double distance,
                             double angle) {
 
@@ -182,7 +183,7 @@ public class Robot {
 
         // Ensure that the opmode is still active
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            if (omActive.getAsBoolean()) {
+            if (true) {
 
                 // Determine new target position, and pass to motor controller
                 moveCounts = (int)(distance * Constants.COUNTS_PER_INCH);
@@ -208,10 +209,10 @@ public class Robot {
                 frontLeft.setPower(speed);
                 backLeft.setPower(speed);
                 backRight.setPower(speed);
+                isMoving = true;
 
                 // keep looping while we are still active, and BOTH motors are running.
-                while (omActive.getAsBoolean() &&
-                        (frontLeft.isBusy() && frontRight.isBusy()
+                while ((frontLeft.isBusy() && frontRight.isBusy()
                                 && backRight.isBusy() && backLeft.isBusy())) {
 
                     // adjust relative speed based on heading error.
@@ -238,13 +239,6 @@ public class Robot {
                     backLeft.setPower(speed);
                     backRight.setPower(speed);
 
-                    // Display drive status for the driver.
-                    tm.addData("Err/St",  "%5.1f/%5.1f",  error, steer);
-                    tm.addData("Target",  "%7d:%7d",      newFrontRightTarget,  newFrontLeftTarget);
-                    tm.addData("Actual",  "%7d:%7d",      frontRight.getCurrentPosition(),
-                            frontLeft.getCurrentPosition());
-                    tm.addData("Speed",   "%5.2f:%5.2f",  leftSpeed, rightSpeed);
-                    tm.update();
                 }
 
                 // Stop all motion;
@@ -252,6 +246,7 @@ public class Robot {
                 frontLeft.setPower(0);
                 backLeft.setPower(0);
                 backRight.setPower(0);
+                isMoving = false;
 
                 // Turn off RUN_TO_POSITION
                 frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -261,6 +256,244 @@ public class Robot {
             }
         }
     }
+
+    public void Drive ( double speed,
+                            double distance) {
+
+        int newFrontLeftTarget;
+        int newFrontRightTarget;
+        int newBackLeftTarget;
+        int newBackRightTarget;
+        int moveCounts;
+        double max;
+        double error;
+        double steer;
+        double leftSpeed;
+        double rightSpeed;
+
+        // Ensure that the opmode is still active
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (true) {
+
+                // Determine new target position, and pass to motor controller
+                moveCounts = (int) (distance * Constants.COUNTS_PER_INCH);
+                newFrontRightTarget = frontRight.getCurrentPosition() + moveCounts;
+                newFrontLeftTarget = frontLeft.getCurrentPosition() + moveCounts;
+                newBackRightTarget = backRight.getCurrentPosition() + moveCounts;
+                newBackLeftTarget = backLeft.getCurrentPosition() + moveCounts;
+
+                // Set Target and Turn On RUN_TO_POSITION
+                frontRight.setTargetPosition(newFrontRightTarget);
+                frontLeft.setTargetPosition(newFrontLeftTarget);
+                backLeft.setTargetPosition(newBackLeftTarget);
+                backRight.setTargetPosition(newBackRightTarget);
+
+                frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                // start motion.
+                speed = Range.clip(Math.abs(speed), 0.0, 1.0);
+                frontRight.setPower(speed);
+                frontLeft.setPower(speed);
+                backLeft.setPower(speed);
+                backRight.setPower(speed);
+                isMoving = true;
+
+                // keep looping while we are still active, and BOTH motors are running.
+                while ((frontLeft.isBusy() && frontRight.isBusy()
+                        && backRight.isBusy() && backLeft.isBusy())) {
+
+                    frontRight.setPower(speed);
+                    frontLeft.setPower(speed);
+                    backLeft.setPower(speed);
+                    backRight.setPower(speed);
+
+                }
+
+                // Stop all motion;
+                frontRight.setPower(0);
+                frontLeft.setPower(0);
+                backLeft.setPower(0);
+                backRight.setPower(0);
+                isMoving = false;
+
+                // Turn off RUN_TO_POSITION
+                frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            }
+        }
+    }
+
+    public void Rotate ( double speed,
+                        double angle) {
+        int     moveCounts;
+        int     newFrontRightTarget;
+        int     newFrontLeftTarget;
+        int     newBackRightTarget;
+        int     newBackLeftTarget;
+        double  leftSpeed;
+        double  rightSpeed;
+        double  startHeading;
+        double  targetHeading;
+        double  currentHeading;
+        boolean clockwise;
+        // set a range for error in the steering angle
+        double  errorRange = 5.0;
+
+        // Ensure that the opmode is still active
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (true) {
+
+                // Determine if turning clockwise or counterclockwise
+                if (angle > 0) {
+                    clockwise = true;
+                } else {
+                    clockwise = false;
+                }
+
+                // set leftSpeed and rightSpeed based on whether angle is positive or negative
+                if (clockwise) {
+                    // Positive angle means rotate clockwise, leftSpeed will be positive, rightSpeed will be negative
+                    leftSpeed = Math.abs(speed);
+                    rightSpeed = -Math.abs(speed);
+                } else {
+                    leftSpeed = -Math.abs(speed);
+                    rightSpeed = Math.abs(speed);
+                }
+
+                // Determine new target position, and pass to motor controller
+                moveCounts = (int)(angle * Constants.COUNTS_PER_DEGREE);
+                if (clockwise) {
+                    // left will be additive, right will be subtractive
+                    // corrected directions based on observing robot
+                    // newFrontRightTarget = frontRight.getCurrentPosition() - moveCounts;
+                    newFrontLeftTarget = frontLeft.getCurrentPosition() + moveCounts;
+                    // newBackRightTarget = backRight.getCurrentPosition() + moveCounts;
+                    // newBackLeftTarget = backLeft.getCurrentPosition() + moveCounts;
+                } else {
+                    // right will be additive, left will be subtractive
+                    // corrected directions based on observing robot
+                    // newFrontRightTarget = frontRight.getCurrentPosition() + moveCounts;
+                    newFrontLeftTarget = frontLeft.getCurrentPosition() - moveCounts;
+                    // newBackRightTarget = backRight.getCurrentPosition() - moveCounts;
+                    // newBackLeftTarget = backLeft.getCurrentPosition() - moveCounts;
+                }
+
+                // Set Target and Turn On RUN_TO_POSITION
+                // frontRight.setTargetPosition(newFrontLeftTarget);
+                frontLeft.setTargetPosition(newFrontLeftTarget);
+                // backLeft.setTargetPosition(newBackLeftTarget);
+                // backRight.setTargetPosition(newBackRightTarget);
+
+                frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                // frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                // backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                // backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                // start motion.
+                // speed = Range.clip(Math.abs(speed), 0.0, 1.0);
+                frontRight.setPower(rightSpeed);
+                frontLeft.setPower(leftSpeed);
+                backLeft.setPower(leftSpeed);
+                backRight.setPower(rightSpeed);
+                isMoving = true;
+
+                // keep looping while we are still active, and BOTH motors are running.
+                while (frontLeft.isBusy()) {
+                    isMoving = true;
+                }
+
+                // Stop all motion;
+                frontRight.setPower(0);
+                frontLeft.setPower(0);
+                backLeft.setPower(0);
+                backRight.setPower(0);
+                isMoving = false;
+
+            }
+        }
+    }
+
+    public void Strafe ( double speed,
+                        double distance) {
+
+        int newFrontLeftTarget;
+        int newFrontRightTarget;
+        int newBackLeftTarget;
+        int newBackRightTarget;
+        int moveCounts;
+        double max;
+        double error;
+        double steer;
+        double leftSpeed;
+        double rightSpeed;
+
+        // Ensure that the opmode is still active
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (true) {
+
+                // Determine new target position, and pass to motor controller
+                moveCounts = (int) (distance * Constants.COUNTS_PER_INCH * Constants.STRAFE_SLIP_FACTOR);
+                //newFrontRightTarget = frontRight.getCurrentPosition() + moveCounts;
+                newFrontLeftTarget = frontLeft.getCurrentPosition() + moveCounts;
+                // newBackRightTarget = backRight.getCurrentPosition() + moveCounts;
+                // newBackLeftTarget = backLeft.getCurrentPosition() + moveCounts;
+
+                // Set Target and Turn On RUN_TO_POSITION
+                //frontRight.setTargetPosition(newFrontRightTarget);
+                frontLeft.setTargetPosition(newFrontLeftTarget);
+                // backLeft.setTargetPosition(newBackLeftTarget);
+                // backRight.setTargetPosition(newBackRightTarget);
+
+                frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                // frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                // backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                // backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                if (distance > 0) {
+                    // Direction = right
+                    speed = Range.clip(Math.abs(speed), 0.0, 1.0);
+                    frontLeft.setPower(speed);
+                    frontRight.setPower(-speed);
+                    backLeft.setPower(-speed);
+                    backRight.setPower(+speed);
+                } else {
+                    // Direction = left
+                    speed = Range.clip(Math.abs(speed), 0.0, 1.0);
+                    frontLeft.setPower(-speed);
+                    frontRight.setPower(speed);
+                    backLeft.setPower(speed);
+                    backRight.setPower(-speed);
+                }
+                // start motion.
+
+                isMoving = true;
+
+                // keep looping while we are still active, and BOTH motors are running.
+                while ((frontLeft.isBusy())) {
+                    isMoving = true;
+                }
+
+                // Stop all motion;
+                frontRight.setPower(0);
+                frontLeft.setPower(0);
+                backLeft.setPower(0);
+                backRight.setPower(0);
+                isMoving = false;
+
+                // Turn off RUN_TO_POSITION
+                frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            }
+        }
+    }
+
 
     /**
      * getError determines the error between the target angle and the robot's current heading
