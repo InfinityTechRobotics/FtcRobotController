@@ -24,4 +24,7 @@ public class Constants {
     public static final double WIDTH = 14.0;
     public static final double COUNTS_PER_DEGREE = ((ROTATION_SLIP_FACTOR*WIDTH*Math.PI)*COUNTS_PER_INCH)/360;
     public static final double STRAFE_SLIP_FACTOR = 1.5;
+//    public static final double COUNTS_PER_INCH = ENCODER_CPR / (WHEEL_DIAMETER * Math.PI);
+//    public static final double kP = 0.15d;
+    public static final double kP_TURN = 0.1d;
 }

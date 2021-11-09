@@ -23,7 +23,7 @@ public class MainTeleOpMode extends OpMode {
     public void init() {
 
         // Initialize Hardware
-        robot.init(hardwareMap);
+        robot.init(hardwareMap, telemetry);
 
     }
 
@@ -66,7 +66,7 @@ public class MainTeleOpMode extends OpMode {
         // if left bumper is pressed, lb value = true
         if(lb) robot.eject();
         // if both rb & lb are false, neither bumper is pressed, so stop intake
-        if(!(rb & lb)) robot.stopIntake();
+        if(!(rb && lb)) robot.stopIntake();
 
         /* Slider */
         double sliderUp = gamepad2.right_trigger;
@@ -76,8 +76,10 @@ public class MainTeleOpMode extends OpMode {
         /* Dumper */
         boolean y = gamepad2.y;
         boolean a = gamepad2.a;
-        if(y) robot.dump();
-        if(a) robot.unDump();
+        boolean b = gamepad2.b;
+        if(a) robot.dump();
+        if(y) robot.unDump();
+        if(b) robot.carry();
 
         /* Wheel of Fortune */
         double x = -gamepad2.left_stick_x;
