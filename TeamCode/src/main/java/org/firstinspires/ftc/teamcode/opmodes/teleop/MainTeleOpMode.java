@@ -32,9 +32,9 @@ public class MainTeleOpMode extends OpMode {
 
         /* Drivetrain */
         // read inputs from gamepad
-        double Y1 = gamepad1.left_stick_y;
-        double Y2 = gamepad1.right_stick_y;
-        double X = gamepad1.right_stick_x;
+        double Y1 = Math.pow(gamepad1.left_stick_y, 3);
+        double Y2 = Math.pow(gamepad1.right_stick_y, 3);
+        double X = Math.pow(gamepad1.right_stick_x, 3);
         // calculate drive vector from gamepad input
         // forward is the average of the left and right sticks in the y direction
         // range is from -1.0 to +1.0

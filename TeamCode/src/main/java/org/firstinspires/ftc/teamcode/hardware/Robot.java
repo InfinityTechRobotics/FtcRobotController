@@ -21,8 +21,8 @@ import java.util.function.BooleanSupplier;
 public class Robot {
 
     // Declare Constants
-    public static final double DUMP_POSITION = 0.2d;
-    public static final double UNDUMP_POSITION = 1.0d;
+    public static final double DUMP_POSITION = 0d; //0.2d;
+    public static final double UNDUMP_POSITION = 1d;
     public static final double CARRY_POSITION = 0.5d;
     public static final double INTAKE_POWER = 0.8d;
     public static final double CAROUSEL_POWER = 0.25;
@@ -555,6 +555,7 @@ public class Robot {
 
     public double getHeading() {
         // TODO check this . . .
+        if(imu == null) return 0d;
         return imu.getIMU().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
     }
 
