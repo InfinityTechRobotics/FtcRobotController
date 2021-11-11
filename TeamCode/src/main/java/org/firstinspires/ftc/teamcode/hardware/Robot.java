@@ -21,7 +21,7 @@ import java.util.function.BooleanSupplier;
 public class Robot {
 
     // Declare Constants
-    public static final double DUMP_POSITION = 0d; //0.2d;
+    public static final double DUMP_POSITION = 0.2d;
     public static final double UNDUMP_POSITION = 1d;
     public static final double CARRY_POSITION = 0.5d;
     public static final double INTAKE_POWER = 0.8d;
