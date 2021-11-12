@@ -27,4 +27,5 @@ public class Constants {
 //    public static final double COUNTS_PER_INCH = ENCODER_CPR / (WHEEL_DIAMETER * Math.PI);
 //    public static final double kP = 0.15d;
     public static final double kP_TURN = 0.1d;
+    public static final int WOF_COUNTS_PER_ROTATION = 28;
 }

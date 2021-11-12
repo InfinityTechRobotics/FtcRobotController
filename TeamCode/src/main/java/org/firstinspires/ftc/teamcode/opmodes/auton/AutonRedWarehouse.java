@@ -9,22 +9,18 @@ import org.firstinspires.ftc.teamcode.hardware.Robot;
 
 /**
     This Op Mode is for use when part of the RED ALLIANCE and we take the position to the
-    SOUTH (closest to the audience and the carousel)
+    NORTH (closest to the back wall and the Warehouse)
 
     Path is:
-        Strafe left x inches until the WOF is touching the carousel
-        Rotate the WOF until the duck is delivered (10 points)
-        Drive forward x inches
-        Either strafe left x inches, or rotate left 90 degrees and drive forward x inches
-        this would result in the robot in the RED STORAGE UNIT (3 points if in, 6 points if completely in)
-        along with the pre-loaded box (2 points)
+        1. Strafe right X inches until the robot is completely in the RED WAREHOUSE
+        2. Stop
 
-        This would result in 10 + 6 + 2 = 18 points if executed correctly
+        This would result in 5 points if executed correctly
  */
 
-@Autonomous(name="Auton RED SOUTH", group="Widebot")
+@Autonomous(name="Auton RED WAREHOUSE", group="Widebot")
 
-public class AutonRedSouth extends LinearOpMode {
+public class AutonRedWarehouse extends LinearOpMode {
 
     /* Declare OpMode members. */
     Robot robot = new Robot();
@@ -52,8 +48,8 @@ public class AutonRedSouth extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        // command to strafe to the left 24 inches
-        robot.Strafe(FORWARD_SPEED,-24.0);
+        // Strafe right 24 inches until the robot is completely in the BLUE WAREHOUSE
+        robot.Strafe(FORWARD_SPEED, 24);
 
         while (robot.isMoving) {
             telemetry.addData("Path", "In Progress");
@@ -63,29 +59,8 @@ public class AutonRedSouth extends LinearOpMode {
         telemetry.addData("Path", "Complete");
         telemetry.update();
 
-        // Spin the Wheel of Forture
+        // 2. End of Path
 
-        // Drive forward 18 inches
-        robot.Drive(FORWARD_SPEED,18.0);
-
-        while (robot.isMoving) {
-            telemetry.addData("Path", "In Progress");
-            telemetry.update();
-        }
-
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
-
-        // Rotate right 90 degrees to face NORTH
-        robot.Rotate(TURN_SPEED,90.0);
-
-        while (robot.isMoving) {
-            telemetry.addData("Path", "In Progress");
-            telemetry.update();
-        }
-
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
     }
 
 }

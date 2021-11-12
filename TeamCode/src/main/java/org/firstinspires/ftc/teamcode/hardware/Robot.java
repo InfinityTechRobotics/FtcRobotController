@@ -15,8 +15,12 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.teamcode.hardware.Constants;
 
 import java.util.function.BooleanSupplier;
+
+import static org.firstinspires.ftc.teamcode.hardware.Constants.WOF_COUNTS_PER_ROTATION;
+
 
 public class Robot {
 
@@ -43,6 +47,8 @@ public class Robot {
     // Declare global variables
     public long liftPosition = 0;
     public boolean isMoving = false;
+    public boolean WOFisMoving;
+    public boolean isChilling = false;
 
     // Class to represent mecanum motor speed
     public class MecanumMotorSpeed {
@@ -78,6 +84,12 @@ public class Robot {
         backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        frontLeft.setPower(0.0);
+        frontRight.setPower(0.0);
+        backLeft.setPower(0.0);
+        backRight.setPower(0.0);
+        isMoving = false;
+
         // Initialize intake motor
         intake = hardwareMap.get(DcMotor.class, "intake");
 
@@ -93,6 +105,7 @@ public class Robot {
 
         // Initialize carousel motor
         carousel = hardwareMap.get(DcMotor.class, "carousel");
+        carousel.setPower(0.0);
 
 //        imu = new IMU();
 //        try {
@@ -153,6 +166,18 @@ public class Robot {
         carousel.setPower(pwr);
     }
 
+    public void rotateWOF (double rotations, double pwr) {
+
+        long targetPos = Math.round(rotations * WOF_COUNTS_PER_ROTATION);
+        targetPos = targetPos + carousel.getCurrentPosition();
+        carousel.setTargetPosition((int) targetPos);
+        carousel.setPower(pwr);
+
+    }
+
+    public boolean isWOFMoving () {
+        return carousel.isBusy();
+    }
     public void stopIntake() {
         intake.setPower(0.0);
     }
@@ -161,8 +186,16 @@ public class Robot {
         lift.setPower(0.0);
     }
 
-    public void stopCarousel() {
+    public void stopWOF() {
         carousel.setPower(0.0);
+    }
+
+    public void chill (long milis) {
+        try {
+            isChilling = true;
+            Thread.sleep(milis);
+        } catch (Exception e){}
+        isChilling = false;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)

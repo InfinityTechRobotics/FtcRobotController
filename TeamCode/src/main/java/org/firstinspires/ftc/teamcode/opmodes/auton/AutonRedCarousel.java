@@ -1,37 +1,30 @@
 
 package org.firstinspires.ftc.teamcode.opmodes.auton;
-import org.firstinspires.ftc.teamcode.hardware.Robot;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.hardware.Robot;
+
 /**
- * This file illustrates the concept of driving a path based on time.
- * It uses the common Pushbot hardware class to define the drive on the robot.
- * The code is structured as a LinearOpMode
- *
- * The code assumes that you do NOT have encoders on the wheels,
- *   otherwise you would use: PushbotAutoDriveByEncoder;
- *
- *   The desired path in this example is:
- *   - Drive forward for 3 seconds
- *   - Spin right for 1.3 seconds
- *   - Drive Backwards for 1 Second
- *   - Stop and close the claw.
- *
- *  The code is written in a simple form with no optimizations.
- *  However, there are several ways that this type of sequence could be streamlined,
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
+    This Op Mode is for use when part of the RED ALLIANCE and we take the position to the
+    SOUTH (closest to the audience and the carousel)
+
+    Path is:
+        Strafe left x inches until the WOF is touching the carousel
+        Rotate the WOF until the duck is delivered (10 points)
+        Drive forward x inches
+        Either strafe left x inches, or rotate left 90 degrees and drive forward x inches
+        this would result in the robot in the RED STORAGE UNIT (3 points if in, 6 points if completely in)
+        along with the pre-loaded box (2 points)
+
+        This would result in 10 + 6 + 2 = 18 points if executed correctly
  */
 
-@Autonomous(name="AutonDriveByTimeTest", group="Widebot")
+@Autonomous(name="Auton RED CAROUSEL", group="Widebot")
 
-public class AutonDriveByTimeTest extends LinearOpMode {
+public class AutonRedCarousel extends LinearOpMode {
 
     /* Declare OpMode members. */
     Robot robot = new Robot();
@@ -59,9 +52,8 @@ public class AutonDriveByTimeTest extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        active = opModeIsActive();
-        // command to go forward 24 inches
-        robot.Drive(FORWARD_SPEED,12.0);
+        // command to strafe to the left 24 inches
+        robot.Strafe(FORWARD_SPEED,-24.0);
 
         while (robot.isMoving) {
             telemetry.addData("Path", "In Progress");
@@ -71,8 +63,20 @@ public class AutonDriveByTimeTest extends LinearOpMode {
         telemetry.addData("Path", "Complete");
         telemetry.update();
 
-        // command to rotate 180 degrees clockwise
-        robot.Rotate(TURN_SPEED, 90.0);
+        // Spin the Wheel of Fortune
+        robot.rotateWOF(5.0, 0.3);
+
+        while (robot.isWOFMoving()) {
+            telemetry.addData("WOF ", "Rotating");
+            telemetry.update();
+        }
+
+        robot.stopWOF();
+        telemetry.addData("WOF ", "Complete");
+        telemetry.update();
+
+        // Drive forward 18 inches
+        robot.Drive(FORWARD_SPEED,18.0);
 
         while (robot.isMoving) {
             telemetry.addData("Path", "In Progress");
@@ -82,8 +86,8 @@ public class AutonDriveByTimeTest extends LinearOpMode {
         telemetry.addData("Path", "Complete");
         telemetry.update();
 
-        // command to strafe to the right 12 inches
-        robot.Strafe(FORWARD_SPEED,12.0);
+        // Rotate right 90 degrees to face NORTH
+        robot.Rotate(TURN_SPEED,90.0);
 
         while (robot.isMoving) {
             telemetry.addData("Path", "In Progress");
@@ -92,6 +96,8 @@ public class AutonDriveByTimeTest extends LinearOpMode {
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
+
+        // End of Path
 
     }
 
