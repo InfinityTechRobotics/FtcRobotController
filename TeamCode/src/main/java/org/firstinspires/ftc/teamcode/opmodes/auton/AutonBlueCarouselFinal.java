@@ -22,9 +22,9 @@ import org.firstinspires.ftc.teamcode.hardware.Robot;
         This would result in 10 + 6 + 2 = 18 points if executed correctly
  */
 
-@Autonomous(name="Auton BLUE SOUTH TEST", group="Widebot")
+@Autonomous(name="Auton BLUE Carousel Final", group="Widebot")
 
-public class AutonBlueSouth extends LinearOpMode {
+public class AutonBlueCarouselFinal extends LinearOpMode {
 
     /* Declare OpMode members. */
     Robot robot = new Robot();
