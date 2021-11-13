@@ -106,8 +106,8 @@ public class AutonBlueCarouselFinal extends LinearOpMode {
 
         sleep(300);
 
-        robot.Drive(0.1,-6.0);
-        robot.Drive(0.025,-3.0);
+        robot.Drive(0.1,-5.0);
+        robot.Drive(0.025,-2.0);
 
         while (robot.isMoving) {
             telemetry.addData("Path", "In Progress");
@@ -137,8 +137,8 @@ public class AutonBlueCarouselFinal extends LinearOpMode {
         robot.Rotate(TURN_SPEED,70.0);
 
         robot.Drive(0.6,12.0);
-        robot.Rotate(TURN_SPEED,-110.0);
-        robot.Drive(0.6,-4.0);
+        robot.Rotate(TURN_SPEED,-115.0);
+        robot.Drive(0.6,-5.0);
 
 
     }
