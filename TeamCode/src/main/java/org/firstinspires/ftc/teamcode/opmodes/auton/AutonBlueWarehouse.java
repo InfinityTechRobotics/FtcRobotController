@@ -53,52 +53,22 @@ public class AutonBlueWarehouse extends LinearOpMode {
 
         //Going for Team shipping hub delivery
         // Drive forward 12 inches
-        robot.Drive(FORWARD_SPEED,18.0);
-        while (robot.isMoving) {
-            telemetry.addData("Path", "In Progress");
-            telemetry.update();
-        }
-
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
-
+        robot.Drive(FORWARD_SPEED,26.0);
         //Turn clockwise(Right)
-        robot.Rotate(TURN_SPEED,-20.0);
+        //robot.Rotate(TURN_SPEED,-20.0);
 
-        robot.Drive(FORWARD_SPEED,2.0);
-        while (robot.isMoving) {
-            telemetry.addData("Path", "In Progress");
-            telemetry.update();
-        }
-
-        //Dump the load
-        robot.unDump();
+       // robot.Drive(FORWARD_SPEED,6.0);
 
         //Start Linear Slide motor
-        robot.setSlidePower(1.0);
+        robot.setSlidePower(0.5);
 
-
-
-        while (opModeIsActive() && (runtime.seconds() < 3.0)) {
-            telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
+        sleep(4000);
 
         //Dump the load
         robot.dump();
 
+        sleep(2000);
 
-
-        // 4. Strafe left 24 inches until the robot is completely in the BLUE WAREHOUSE
-        //robot.Strafe(FORWARD_SPEED, -24);
-
-        while (robot.isMoving) {
-            telemetry.addData("Path", "In Progress");
-            telemetry.update();
-        }
-
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
 
         // 2. End of Path
 

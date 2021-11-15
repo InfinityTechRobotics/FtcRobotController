@@ -32,7 +32,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @Autonomous(name="AutonDriveByTimeTest", group="Widebot")
-
+@Disabled
 public class AutonSimpleTest extends LinearOpMode {
 
     /* Declare OpMode members. */

@@ -101,10 +101,10 @@ public class AutonRedCarouselFinal extends LinearOpMode {
         // Drive forward 24 inches
         robot.Drive(FORWARD_SPEED,-24.0);
 
-        robot.Rotate(TURN_SPEED,-8.0);
+        robot.Rotate(TURN_SPEED,-10.0);
         //sleep(30000);
 
-        robot.Drive(0.1,-5.0);
+        robot.Drive(0.1,-10.0);
         robot.Drive(0.025,-3.0);
 
         //TEST WOF
@@ -122,6 +122,10 @@ public class AutonRedCarouselFinal extends LinearOpMode {
         }
 
         robot.setWOFPower(0.0);
+
+        robot.Drive(0.5,6.0);
+        robot.Rotate(TURN_SPEED,-60);
+        robot.Drive(0.5,7.0);
 
         sleep(5000);
 
