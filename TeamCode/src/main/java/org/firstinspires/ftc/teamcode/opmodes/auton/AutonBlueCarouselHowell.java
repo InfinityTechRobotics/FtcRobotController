@@ -1,8 +1,11 @@
 
 package org.firstinspires.ftc.teamcode.opmodes.auton;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -23,10 +26,9 @@ import org.firstinspires.ftc.teamcode.hardware.Robot;
         This would result in 10 + 6 + 2 = 18 points if executed correctly
  */
 
-@Autonomous(name="Auton BLUE Carousel Final", group="Widebot")
-@Disabled
+@Autonomous(name="Auton BLUE Carousel Howell", group="Widebot")
 
-public class AutonBlueCarouselFinal extends LinearOpMode {
+public class AutonBlueCarouselHowell extends LinearOpMode {
 
     /* Declare OpMode members. */
     Robot robot = new Robot();
@@ -38,6 +40,7 @@ public class AutonBlueCarouselFinal extends LinearOpMode {
     String telemetryMessage = "";
     boolean active = false;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void runOpMode() {
 
@@ -60,9 +63,6 @@ public class AutonBlueCarouselFinal extends LinearOpMode {
         telemetry.update();
 
 
-        // command to strafe to the left 24 inches
-        //BKS
-        //robot.Strafe(FORWARD_SPEED,-24.0);
 
         while (robot.isMoving) {
             telemetry.addData("Path", "In Progress");
@@ -72,25 +72,13 @@ public class AutonBlueCarouselFinal extends LinearOpMode {
         telemetry.addData("Path", "Complete");
         telemetry.update();
 
-        //TEST
+        //TEST COde
 
-        //sleep(5000)
+        //TEST ENDS
 
-        // Spin the Wheel of Forture
-
-        // Drive forward 6 inches
-        robot.Drive(FORWARD_SPEED,10.0);
-
-        while (robot.isMoving) {
-            telemetry.addData("Path", "In Progress");
-            telemetry.update();
-        }
-
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
-
-        // Rotate right 90 degrees to face NORTH
-        robot.Rotate(TURN_SPEED,-70.0);
+        // Drive forward 10 inches
+        //robot.Drive(FORWARD_SPEED,10.0);
+        robot.Drive(FORWARD_SPEED,14.0);
 
         while (robot.isMoving) {
             telemetry.addData("Path", "In Progress");
@@ -100,13 +88,39 @@ public class AutonBlueCarouselFinal extends LinearOpMode {
         telemetry.addData("Path", "Complete");
         telemetry.update();
 
-        sleep(300);
+        robot.Rotate(TURN_SPEED,-120.0);
 
 
-        // Drive forward 24 inches
+        while (robot.isMoving) {
+            telemetry.addData("Path", "In Progress");
+            telemetry.update();
+        }
+
+        telemetry.addData("Path", "Complete");
+        telemetry.update();
+
+        //Start Linear Slide motor
+        robot.moveLiftToPos(telemetry, () -> opModeIsActive(), 0.9d); // TODO tune %
+
+        //Dump the load
+        robot.dump();
+        sleep(2000);
+
+        robot.carry();
+
+        robot.moveLiftToPos(telemetry, () -> opModeIsActive(), 0.15d);
+
+        robot.unDump();
+
+        robot.Rotate(TURN_SPEED,40.0);
+
+        //Not Using Ramp WOF for now
+        //robot.rampWOF(this, 0.1d, 0.5d, 10000);
+
+        // Drive forward 20 inches
         robot.Drive(FORWARD_SPEED,-20);
+        sleep(30000);
 
-        sleep(300);
 
         robot.Drive(0.1,-5.0);
         robot.Drive(0.025,-2.0);
@@ -120,8 +134,6 @@ public class AutonBlueCarouselFinal extends LinearOpMode {
         telemetry.update();
 
         //WOF
-        //robot.setWOFPower(20);
-        //TEST WOF
         robot.setWOFPower(0.7);
 
         //try back and forth
@@ -132,6 +144,9 @@ public class AutonBlueCarouselFinal extends LinearOpMode {
             telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
+
+
+        sleep(30000);
 
         robot.setWOFPower(0.0);
         robot.Drive(0.4,6.0);

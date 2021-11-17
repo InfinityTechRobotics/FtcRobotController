@@ -4,6 +4,7 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -32,6 +33,7 @@ public class Robot {
     public static final double CAROUSEL_POWER = 0.25;
     public static final double LIFT_POWER_SCALE_FACTOR = 1.0;
     public static final double LIFT_POWER = 0.75;
+    public static final int LIFT_RANGE = 1650;
 
     // Declare Actuators
     private DcMotor frontLeft = null;
@@ -43,6 +45,8 @@ public class Robot {
     private Servo deliver = null;
     private DcMotor carousel = null;
     private IMU imu = null;
+
+    private int initLiftEncPos = 0;
 
     // Declare global variables
     public long liftPosition = 0;
@@ -119,6 +123,8 @@ public class Robot {
 //            tm.update();
 //        }
 
+        initLiftEncPos = getLiftEnc();
+
     }
 
     public void vector(double drive, double strafe, double twist) {
@@ -175,6 +181,26 @@ public class Robot {
 
     }
 
+    /**
+     *
+     * @param initialPwr
+     * @param terminalPwr
+     * @param duration time in milliseconds
+     */
+    public void rampWOF(LinearOpMode om, double initialPwr, double terminalPwr, long duration) {
+        double period = 100d;
+        double diff = terminalPwr - initialPwr;
+        double step = diff / 2 * period;
+        long stepTime = duration / (long) period;
+        double startTime = System.currentTimeMillis();
+        double currentPwr = initialPwr;
+        do {
+            carousel.setPower(currentPwr);
+            om.sleep(stepTime);
+            currentPwr += step;
+        } while(System.currentTimeMillis() < (startTime + duration));
+    }
+
     public boolean isWOFMoving () {
         return carousel.isBusy();
     }
@@ -198,10 +224,18 @@ public class Robot {
         isChilling = false;
     }
 
+    /* 0% = bottom; 100% = top, taken as double between 0.0 and 1.0 */
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void moveLiftToPos(Telemetry tm, BooleanSupplier opModeActive, int encCounts) {
+    public void moveLiftToPos(Telemetry tm, BooleanSupplier opModeActive, double target) {
+
+        // quick sanity check
+        if(target < 0.0) target = 0d;
+        else if (target > 1.0) target = 1d;
+
+        // run to pos
         if (opModeActive.getAsBoolean()) {
-            int targetPos = lift.getCurrentPosition() + encCounts;
+            int distToPos = (int) (LIFT_RANGE * target);
+            int targetPos = initLiftEncPos + distToPos;
             lift.setTargetPosition(targetPos);
             lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             while (opModeActive.getAsBoolean() && lift.isBusy()) {

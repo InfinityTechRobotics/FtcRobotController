@@ -1,8 +1,11 @@
 
 package org.firstinspires.ftc.teamcode.opmodes.auton;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -10,23 +13,18 @@ import org.firstinspires.ftc.teamcode.hardware.Robot;
 
 /**
     This Op Mode is for use when part of the RED ALLIANCE and we take the position to the
-    SOUTH (closest to the audience and the carousel)
+    NORTH (closest to the back wall and the Warehouse)
 
     Path is:
-        Strafe left x inches until the WOF is touching the carousel
-        Rotate the WOF until the duck is delivered (10 points)
-        Drive forward x inches
-        Either strafe left x inches, or rotate left 90 degrees and drive forward x inches
-        this would result in the robot in the RED STORAGE UNIT (3 points if in, 6 points if completely in)
-        along with the pre-loaded box (2 points)
+        1. Strafe right X inches until the robot is completely in the RED WAREHOUSE
+        2. Stop
 
-        This would result in 10 + 6 + 2 = 18 points if executed correctly
+        This would result in 5 points if executed correctly
  */
 
-@Autonomous(name="Auton BLUE Carousel Final", group="Widebot")
-@Disabled
+@Autonomous(name="Auton RED WAREHOUSE HOWELL", group="Widebot")
 
-public class AutonBlueCarouselFinal extends LinearOpMode {
+public class AutonRedWarehouseHowell extends LinearOpMode {
 
     /* Declare OpMode members. */
     Robot robot = new Robot();
@@ -38,6 +36,7 @@ public class AutonBlueCarouselFinal extends LinearOpMode {
     String telemetryMessage = "";
     boolean active = false;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void runOpMode() {
 
@@ -54,15 +53,17 @@ public class AutonBlueCarouselFinal extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+        while (robot.isMoving) {
+            telemetry.addData("Path", "In Progress");
+            telemetry.update();
+        }
 
-
-        telemetry.addData("Status", "WOF is Done");    //
+        telemetry.addData("Path", "Complete");
         telemetry.update();
 
 
-        // command to strafe to the left 24 inches
-        //BKS
-        //robot.Strafe(FORWARD_SPEED,-24.0);
+        //Going for Team shipping hub delivery
+        robot.Drive(FORWARD_SPEED,14.0);
 
         while (robot.isMoving) {
             telemetry.addData("Path", "In Progress");
@@ -72,14 +73,27 @@ public class AutonBlueCarouselFinal extends LinearOpMode {
         telemetry.addData("Path", "Complete");
         telemetry.update();
 
-        //TEST
+        //Turn Anticlock towards Alliance Shipping Hub
+        robot.Rotate(TURN_SPEED,-120.0);
 
-        //sleep(5000)
+        //Start Linear Slide motor
+        robot.moveLiftToPos(telemetry, () -> opModeIsActive(), 0.9d); // TODO tune %
 
-        // Spin the Wheel of Forture
+        //Dump the load
+        robot.dump();
+        sleep(2000);
 
-        // Drive forward 6 inches
-        robot.Drive(FORWARD_SPEED,10.0);
+        robot.carry();
+
+        robot.moveLiftToPos(telemetry, () -> opModeIsActive(), 0.15d);
+
+        robot.unDump();
+
+        //Turn clock towards Alliance Shipping Hub
+        robot.Rotate(TURN_SPEED,120.0);
+
+        // Drive Back 24 inches
+        robot.Drive(FORWARD_SPEED,-13.0);
 
         while (robot.isMoving) {
             telemetry.addData("Path", "In Progress");
@@ -88,28 +102,8 @@ public class AutonBlueCarouselFinal extends LinearOpMode {
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
-
-        // Rotate right 90 degrees to face NORTH
-        robot.Rotate(TURN_SPEED,-70.0);
-
-        while (robot.isMoving) {
-            telemetry.addData("Path", "In Progress");
-            telemetry.update();
-        }
-
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
-
-        sleep(300);
-
-
-        // Drive forward 24 inches
-        robot.Drive(FORWARD_SPEED,-20);
-
-        sleep(300);
 
         robot.Drive(0.1,-5.0);
-        robot.Drive(0.025,-2.0);
 
         while (robot.isMoving) {
             telemetry.addData("Path", "In Progress");
@@ -119,29 +113,29 @@ public class AutonBlueCarouselFinal extends LinearOpMode {
         telemetry.addData("Path", "Complete");
         telemetry.update();
 
-        //WOF
-        //robot.setWOFPower(20);
-        //TEST WOF
-        robot.setWOFPower(0.7);
+        // command to strafe to the right 28 inches
+        robot.Strafe(FORWARD_SPEED,28.0);
 
-        //try back and forth
-        robot.Drive(0.025,2.0);
-        robot.Drive(0.025,-2.0);
-
-        while (opModeIsActive() && (runtime.seconds() < 10.0)) {
-            telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
+        while (robot.isMoving) {
+            telemetry.addData("Path", "In Progress");
             telemetry.update();
         }
 
-        robot.setWOFPower(0.0);
-        robot.Drive(0.4,6.0);
-        // Rotate right 90 degrees to face NORTH
-        robot.Rotate(TURN_SPEED,70.0);
+        telemetry.addData("Path", "Complete");
+        telemetry.update();
 
-        robot.Drive(0.6,12.0);
-        robot.Rotate(TURN_SPEED,-115.0);
-        robot.Drive(0.6,-5.0);
+        // Drive forward 20 inches(To Make space for alliance to park in warehouse
+        robot.Drive(FORWARD_SPEED,20.0);
 
+        while (robot.isMoving) {
+            telemetry.addData("Path", "In Progress");
+            telemetry.update();
+        }
+
+        telemetry.addData("Path", "Complete");
+        telemetry.update();
+
+        // 2. End of Path
 
     }
 
