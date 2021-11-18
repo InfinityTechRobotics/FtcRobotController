@@ -63,7 +63,7 @@ public class AutonRedWarehouseHowell extends LinearOpMode {
 
 
         //Going for Team shipping hub delivery
-        robot.Drive(FORWARD_SPEED,14.0);
+        robot.Drive(FORWARD_SPEED,15.0);
 
         while (robot.isMoving) {
             telemetry.addData("Path", "In Progress");
@@ -93,7 +93,7 @@ public class AutonRedWarehouseHowell extends LinearOpMode {
         robot.Rotate(TURN_SPEED,120.0);
 
         // Drive Back 24 inches
-        robot.Drive(FORWARD_SPEED,-13.0);
+        robot.Drive(FORWARD_SPEED,-14.0);
 
         while (robot.isMoving) {
             telemetry.addData("Path", "In Progress");
@@ -113,8 +113,8 @@ public class AutonRedWarehouseHowell extends LinearOpMode {
         telemetry.addData("Path", "Complete");
         telemetry.update();
 
-        // command to strafe to the right 28 inches
-        robot.Strafe(FORWARD_SPEED,28.0);
+        // command to strafe to the right 25 inches
+        robot.Strafe(FORWARD_SPEED,25.0);
 
         while (robot.isMoving) {
             telemetry.addData("Path", "In Progress");

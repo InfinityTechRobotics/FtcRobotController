@@ -62,8 +62,8 @@ public class AutonBlueWarehouseHowell extends LinearOpMode {
         telemetry.update();
 
 
-        // Drive forward 26 inches
-        robot.Drive(FORWARD_SPEED,26.0);
+        // Drive forward 27 inches
+        robot.Drive(FORWARD_SPEED,27.0);
 
         while (robot.isMoving) {
             telemetry.addData("Path", "In Progress");
@@ -72,6 +72,7 @@ public class AutonBlueWarehouseHowell extends LinearOpMode {
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
+
 
         //Start Linear Slide motor
         robot.moveLiftToPos(telemetry, () -> opModeIsActive(), 0.9d); // TODO tune %
@@ -87,7 +88,7 @@ public class AutonBlueWarehouseHowell extends LinearOpMode {
         robot.unDump();
 
         // Drive Back 26 inches
-        robot.Drive(FORWARD_SPEED,-24.0);
+        robot.Drive(FORWARD_SPEED,-25.0);
 
         while (robot.isMoving) {
             telemetry.addData("Path", "In Progress");
@@ -109,7 +110,7 @@ public class AutonBlueWarehouseHowell extends LinearOpMode {
 
 
         // command to strafe to the left 6 inches
-        robot.Strafe(FORWARD_SPEED,-26.0);
+        robot.Strafe(FORWARD_SPEED,-25.0);
 
         while (robot.isMoving) {
             telemetry.addData("Path", "In Progress");

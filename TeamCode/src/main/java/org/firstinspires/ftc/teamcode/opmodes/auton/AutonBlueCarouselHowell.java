@@ -73,12 +73,14 @@ public class AutonBlueCarouselHowell extends LinearOpMode {
         telemetry.update();
 
         //TEST COde
+        //robot.Rotate(TURN_SPEED,-30.0);
+        //sleep(30000);
 
         //TEST ENDS
 
         // Drive forward 10 inches
         //robot.Drive(FORWARD_SPEED,10.0);
-        robot.Drive(FORWARD_SPEED,14.0);
+        robot.Drive(FORWARD_SPEED,15.0);
 
         while (robot.isMoving) {
             telemetry.addData("Path", "In Progress");
@@ -112,18 +114,17 @@ public class AutonBlueCarouselHowell extends LinearOpMode {
 
         robot.unDump();
 
-        robot.Rotate(TURN_SPEED,40.0);
+        robot.Rotate(TURN_SPEED,50.0);
 
         //Not Using Ramp WOF for now
         //robot.rampWOF(this, 0.1d, 0.5d, 10000);
 
         // Drive forward 20 inches
-        robot.Drive(FORWARD_SPEED,-20);
-        sleep(30000);
+        robot.Drive(FORWARD_SPEED,-25);
 
 
         robot.Drive(0.1,-5.0);
-        robot.Drive(0.025,-2.0);
+        robot.Drive(0.025,-1.0);
 
         while (robot.isMoving) {
             telemetry.addData("Path", "In Progress");
@@ -137,24 +138,20 @@ public class AutonBlueCarouselHowell extends LinearOpMode {
         robot.setWOFPower(0.7);
 
         //try back and forth
-        robot.Drive(0.025,2.0);
+        robot.Drive(0.025,1.0);
+        robot.Drive(0.025,-2.0);
+        robot.Drive(0.025,1.0);
         robot.Drive(0.025,-2.0);
 
-        while (opModeIsActive() && (runtime.seconds() < 10.0)) {
-            telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-
-
-        sleep(30000);
-
-        robot.setWOFPower(0.0);
         robot.Drive(0.4,6.0);
         // Rotate right 90 degrees to face NORTH
         robot.Rotate(TURN_SPEED,70.0);
+        robot.setWOFPower(0.0);
 
-        robot.Drive(0.6,12.0);
-        robot.Rotate(TURN_SPEED,-115.0);
+        //sleep(30000);
+
+        robot.Drive(0.6,16.0);
+        robot.Rotate(TURN_SPEED,-100.0);
         robot.Drive(0.6,-5.0);
 
 
