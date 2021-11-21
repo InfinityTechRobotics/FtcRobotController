@@ -26,7 +26,7 @@ import org.firstinspires.ftc.teamcode.hardware.Robot;
         This would result in 10 + 6 + 2 = 18 points if executed correctly
  */
 
-@Autonomous(name="Auton BLUE Carousel Howell", group="Widebot")
+@Autonomous(name="1-BLUE Carousel Howell", group="Widebot")
 
 public class AutonBlueCarouselHowell extends LinearOpMode {
 
