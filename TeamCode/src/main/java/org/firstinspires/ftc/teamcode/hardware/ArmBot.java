@@ -23,34 +23,26 @@ import java.util.function.BooleanSupplier;
 import static org.firstinspires.ftc.teamcode.hardware.Constants.WOF_COUNTS_PER_ROTATION;
 
 
-public class Robot {
+public class ArmBot {
 
     // Declare Constants
     public static final double CORE_HEX_EDGES_PER_RADIAN = 288d / (2 * Math.PI);
-    public static final double DUMP_POSITION = 0.2d;
-    public static final double UNDUMP_POSITION = 1d;
-    public static final double CARRY_POSITION = 0.5d;
-    public static final double INTAKE_POWER = 0.8d;
     public static final double CAROUSEL_POWER = 0.25;
-    public static final double LIFT_POWER_SCALE_FACTOR = 1.0;
-    public static final double LIFT_POWER = 0.75;
-    public static final int LIFT_RANGE = 1650;
+
+    // TODO check these measurements, i just guessed -_-
+    public static final double JOINT_1_LEN = 0.2; //m
+    public static final double JOINT_2_LEN = 0.4; //m
 
     // Declare Actuators
     private DcMotor frontLeft = null;
     private DcMotor frontRight = null;
     private DcMotor backLeft = null;
     private DcMotor backRight = null;
-    private DcMotor intake = null;
-    private DcMotor lift = null;
-    private Servo deliver = null;
     private DcMotor carousel = null;
+    private DcMotor joint1 = null;
+    private DcMotor joint2 = null;
     private IMU imu = null;
 
-    private int initLiftEncPos = 0;
-
-    // Declare global variables
-    public long liftPosition = 0;
     public boolean isMoving = false;
     public boolean WOFisMoving;
     public boolean isChilling = false;
@@ -95,37 +87,61 @@ public class Robot {
         backRight.setPower(0.0);
         isMoving = false;
 
-        // Initialize intake motor
-        intake = hardwareMap.get(DcMotor.class, "intake");
-
-        // Initialize lift motor
-        lift = hardwareMap.get(DcMotor.class,"lift");
-        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        // Initialize deliver servo
-        deliver = hardwareMap.get(Servo.class, "deliver");
-        // Set the initial position as 0.0d
-        //deliver.setPosition(0.0d);
-        // deliver.scaleRange(0.0d, 0.5d);
-
         // Initialize carousel motor
         carousel = hardwareMap.get(DcMotor.class, "carousel");
         carousel.setPower(0.0);
 
-//        imu = new IMU();
-//        try {
-//            imu.initIMU(hardwareMap);
-//            tm.addData("IMU Initialized Good :)", "");
-//            tm.update();
-//        } catch(Exception e) {
-//            // TODO log this somehow . . .
-//            tm.addData("IMU:", "Oh No, I Broke :(");
-//            tm.addData("IMU ERROR: ", e.getMessage());
-//            tm.update();
-//        }
+        // Initialize arm motors
+        joint1 = hardwareMap.get(DcMotor.class, "joint1");
+        joint2 = hardwareMap.get(DcMotor.class, "joint2");
 
-        initLiftEncPos = getLiftEnc();
+        joint1.setPower(0d);
+        joint2.setPower(0d);
+        joint1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        joint2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+    }
+
+    /**
+     * takes end position of end of the arm and calculates the angle of the motors
+     * @param xEnd x position of end of arm
+     * @param yEnd y position of end of arm
+     * @return [target1, target2] returns array of target encoder values
+     */
+    public int[] armInverseKinematics(double xEnd, double yEnd){
+
+        int joint1Target = 0;
+        int joint2Target = 0;
+        double alpha1, alpha2, alpha3, theta1, theta2, hyp;
+
+        hyp = Math.sqrt((xEnd*xEnd)+ (yEnd*yEnd));
+
+        alpha1 = Math.atan2(yEnd, xEnd);
+        alpha2 = Math.acos(( (JOINT_1_LEN * JOINT_1_LEN) + (hyp * hyp) - (JOINT_2_LEN * JOINT_2_LEN)) / (2 * JOINT_1_LEN * hyp));
+        alpha3 = Math.acos(( (JOINT_1_LEN * JOINT_1_LEN) + (JOINT_2_LEN * JOINT_2_LEN) - (hyp * hyp)) / (2 * JOINT_1_LEN * JOINT_2_LEN));
+
+        theta1 = alpha1 + alpha2;
+        theta2 = alpha3 - Math.PI;
+
+        joint1Target = (int) (theta1 * CORE_HEX_EDGES_PER_RADIAN);
+        joint2Target = (int) ((theta1 + theta2) * CORE_HEX_EDGES_PER_RADIAN);
+        return new int[]{joint1Target, joint2Target};
+
+    }
+
+    /**
+     * takes angle of joint motors and calculates the position of the end of the arm
+     * @param theta1 angle of joint 1 motor
+     * @param theta2 angle of joint 2 motor
+     * @return [x,y] array representing position of end of arm in x,y plane
+     */
+    public double[] armForwardKinematics(double theta1, double theta2) {
+        double x1, x2, y1, y2;
+        x1 = JOINT_1_LEN * Math.cos(theta1);
+        y1 = JOINT_1_LEN * Math.sin(theta1);
+        x2 = x1 + (JOINT_2_LEN * Math.cos(theta1 + theta2));
+        y2 = y1 + (JOINT_2_LEN * Math.sin(theta1 + theta2));
+        return new double[]{x2,y2};
     }
 
     public void vector(double drive, double strafe, double twist) {
@@ -143,30 +159,6 @@ public class Robot {
         backLeft.setPower(speed.backLeft);
         backRight.setPower(speed.backRight);
 
-    }
-
-    public void collect() {
-        intake.setPower(INTAKE_POWER);
-    }
-
-    public void eject() {
-        intake.setPower(-INTAKE_POWER);
-    }
-
-    public void setSlidePower(double pwr) {
-        lift.setPower(LIFT_POWER_SCALE_FACTOR*pwr);
-    }
-
-    public void dump() {
-        deliver.setPosition(DUMP_POSITION);
-    }
-
-    public void unDump() {
-        deliver.setPosition(UNDUMP_POSITION);
-    }
-
-    public void carry() { 
-        deliver.setPosition(CARRY_POSITION); 
     }
 
     public void setWOFPower(double pwr) {
@@ -205,13 +197,6 @@ public class Robot {
     public boolean isWOFMoving () {
         return carousel.isBusy();
     }
-    public void stopIntake() {
-        intake.setPower(0.0);
-    }
-
-    public void stopLift() {
-        lift.setPower(0.0);
-    }
 
     public void stopWOF() {
         carousel.setPower(0.0);
@@ -223,32 +208,6 @@ public class Robot {
             Thread.sleep(milis);
         } catch (Exception e){}
         isChilling = false;
-    }
-
-    /* 0% = bottom; 100% = top, taken as double between 0.0 and 1.0 */
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void moveLiftToPos(Telemetry tm, BooleanSupplier opModeActive, double target) {
-
-        // quick sanity check
-        if(target < 0.0) target = 0d;
-        else if (target > 1.0) target = 1d;
-
-        // run to pos
-        if (opModeActive.getAsBoolean()) {
-            int distToPos = (int) (LIFT_RANGE * target);
-            int targetPos = initLiftEncPos + distToPos;
-            lift.setTargetPosition(targetPos);
-            lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            while (opModeActive.getAsBoolean() && lift.isBusy()) {
-                lift.setPower(LIFT_POWER);
-            }
-            lift.setPower(0d);
-            lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
-    }
-
-    public int getLiftEnc() {
-        return lift.getCurrentPosition();
     }
 
     /**
@@ -312,7 +271,7 @@ public class Robot {
 
                 // keep looping while we are still active, and BOTH motors are running.
                 while ((frontLeft.isBusy() && frontRight.isBusy()
-                                && backRight.isBusy() && backLeft.isBusy())) {
+                        && backRight.isBusy() && backLeft.isBusy())) {
 
                     // adjust relative speed based on heading error.
                     error = getError(angle);
@@ -357,7 +316,7 @@ public class Robot {
     }
 
     public void Drive ( double speed,
-                            double distance) {
+                        double distance) {
 
         int newFrontLeftTarget;
         int newFrontRightTarget;
@@ -428,7 +387,7 @@ public class Robot {
     }
 
     public void Rotate ( double speed,
-                        double angle) {
+                         double angle) {
         int     moveCounts;
         int     newFrontRightTarget;
         int     newFrontLeftTarget;
@@ -518,7 +477,7 @@ public class Robot {
     }
 
     public void Strafe ( double speed,
-                        double distance) {
+                         double distance) {
 
         int newFrontLeftTarget;
         int newFrontRightTarget;
