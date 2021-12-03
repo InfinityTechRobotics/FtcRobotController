@@ -1,6 +1,10 @@
 
 package org.firstinspires.ftc.teamcode.opmodes.auton;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -19,7 +23,7 @@ import org.firstinspires.ftc.teamcode.hardware.Robot;
         This would result in 5 points if executed correctly
  */
 
-@Autonomous(name="Auton BLUE WAREHOUSE", group="Widebot")
+@Autonomous(name=" TEST BLUE WAREHOUSE", group="Widebot")
 @Disabled
 
 public class AutonBlueWarehouse extends LinearOpMode {
@@ -34,6 +38,7 @@ public class AutonBlueWarehouse extends LinearOpMode {
     String telemetryMessage = "";
     boolean active = false;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void runOpMode() {
 
@@ -50,29 +55,81 @@ public class AutonBlueWarehouse extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        //Switch to carry position
-        robot.carry();
+        while (robot.isMoving) {
+            telemetry.addData("Path", "In Progress");
+            telemetry.update();
+        }
 
-        //Going for Team shipping hub delivery
-        // Drive forward 12 inches
-        robot.Drive(FORWARD_SPEED,26.0);
-        //Turn clockwise(Right)
-        //robot.Rotate(TURN_SPEED,-20.0);
+        telemetry.addData("Path", "Complete");
+        telemetry.update();
 
-       // robot.Drive(FORWARD_SPEED,6.0);
+        // Drive forward 15 inches
+        robot.Drive(FORWARD_SPEED,12.0);
+
+        while (robot.isMoving) {
+            telemetry.addData("Path", "In Progress");
+            telemetry.update();
+        }
+
+        telemetry.addData("Path", "Complete");
+        telemetry.update();
+
+        //Turn Anticlock away from Alliance Shipping Hub
+        robot.Rotate(TURN_SPEED,-25.0);
+
+        while (robot.isMoving) {
+            telemetry.addData("Path", "In Progress");
+            telemetry.update();
+        }
+
+        sleep(1000);
+
+        telemetry.addData("Path", "Complete");
+        telemetry.update();
 
         //Start Linear Slide motor
-        robot.setSlidePower(0.5);
+        robot.moveLiftToPos(telemetry, () -> opModeIsActive(), 0.9d); // TODO tune %
 
-        sleep(4000);
-
-        //Dump the load
+        //Dump the load(Test Middle Dump Position
         robot.dump();
-
         sleep(2000);
 
+        robot.carry();
 
-        // 2. End of Path
+        robot.moveLiftToPos(telemetry, () -> opModeIsActive(), 0.15d);
+
+        robot.unDump();
+
+        sleep(1000);
+
+        robot.Rotate(TURN_SPEED, 25.0);
+
+        // Drive Back 26 inches
+        robot.Drive(FORWARD_SPEED,-10);
+        robot.Drive( 0.1, -5);
+        robot.Rotate(0.1, 10.0);
+
+        while (robot.isMoving) {
+            telemetry.addData("Path", "In Progress");
+            telemetry.update();
+        }
+
+        telemetry.addData("Path", "Complete");
+        telemetry.update();
+
+        robot.Strafe(0.2,-15);
+        robot.Drive(0.1 , -5);
+        robot.Strafe(0.2, -26);
+        robot.Drive(FORWARD_SPEED, 15);
+
+        while (robot.isMoving) {
+            telemetry.addData("Path", "In Progress");
+            telemetry.update();
+        }
+
+        telemetry.addData("Path", "Complete");
+        telemetry.update();
+
 
     }
 

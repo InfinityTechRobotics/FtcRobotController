@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.hardware.Robot;
         This would result in 5 points if executed correctly
  */
 
-@Autonomous(name="Auton RED WAREHOUSE HOWELL", group="Widebot")
+@Autonomous(name="4-RED WAREHOUSE HOWELL", group="Widebot")
 
 public class AutonRedWarehouseHowell extends LinearOpMode {
 
@@ -58,12 +58,13 @@ public class AutonRedWarehouseHowell extends LinearOpMode {
             telemetry.update();
         }
 
+        sleep(7000);
         telemetry.addData("Path", "Complete");
         telemetry.update();
 
 
         //Going for Team shipping hub delivery
-        robot.Drive(FORWARD_SPEED,15.0);
+        robot.Drive(FORWARD_SPEED,16.0);
 
         while (robot.isMoving) {
             telemetry.addData("Path", "In Progress");
@@ -74,7 +75,7 @@ public class AutonRedWarehouseHowell extends LinearOpMode {
         telemetry.update();
 
         //Turn Anticlock towards Alliance Shipping Hub
-        robot.Rotate(TURN_SPEED,-120.0);
+        robot.Rotate(TURN_SPEED,-115.0);
 
         //Start Linear Slide motor
         robot.moveLiftToPos(telemetry, () -> opModeIsActive(), 0.9d); // TODO tune %
@@ -90,10 +91,10 @@ public class AutonRedWarehouseHowell extends LinearOpMode {
         robot.unDump();
 
         //Turn clock towards Alliance Shipping Hub
-        robot.Rotate(TURN_SPEED,120.0);
+        robot.Rotate(TURN_SPEED,115.0);
 
         // Drive Back 24 inches
-        robot.Drive(FORWARD_SPEED,-14.0);
+        robot.Drive(FORWARD_SPEED,-15.0);
 
         while (robot.isMoving) {
             telemetry.addData("Path", "In Progress");
@@ -113,8 +114,8 @@ public class AutonRedWarehouseHowell extends LinearOpMode {
         telemetry.addData("Path", "Complete");
         telemetry.update();
 
-        // command to strafe to the right 25 inches
-        robot.Strafe(FORWARD_SPEED,25.0);
+        // command to strafe to the right 25/28 inches
+        robot.Strafe(FORWARD_SPEED,28.0);
 
         while (robot.isMoving) {
             telemetry.addData("Path", "In Progress");

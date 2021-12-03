@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.hardware.Robot;
         This would result in 5 points if executed correctly
  */
 
-@Autonomous(name="Auton BLUE WAREHOUSE HOWELL", group="Widebot")
+@Autonomous(name="2-BLUE WAREHOUSE HOWELL", group="Widebot")
 
 public class AutonBlueWarehouseHowell extends LinearOpMode {
 
@@ -61,9 +61,8 @@ public class AutonBlueWarehouseHowell extends LinearOpMode {
         telemetry.addData("Path", "Complete");
         telemetry.update();
 
-
-        // Drive forward 27 inches
-        robot.Drive(FORWARD_SPEED,27.0);
+        // Drive forward 15 inches
+        robot.Drive(FORWARD_SPEED,12.0);
 
         while (robot.isMoving) {
             telemetry.addData("Path", "In Progress");
@@ -73,11 +72,23 @@ public class AutonBlueWarehouseHowell extends LinearOpMode {
         telemetry.addData("Path", "Complete");
         telemetry.update();
 
+        //Turn Anticlock away from Alliance Shipping Hub
+        robot.Rotate(TURN_SPEED,-25.0);
+
+        while (robot.isMoving) {
+            telemetry.addData("Path", "In Progress");
+            telemetry.update();
+        }
+
+        sleep(1000);
+
+        telemetry.addData("Path", "Complete");
+        telemetry.update();
 
         //Start Linear Slide motor
         robot.moveLiftToPos(telemetry, () -> opModeIsActive(), 0.9d); // TODO tune %
 
-        //Dump the load
+        //Dump the load(Test Middle Dump Position
         robot.dump();
         sleep(2000);
 
@@ -87,8 +98,14 @@ public class AutonBlueWarehouseHowell extends LinearOpMode {
 
         robot.unDump();
 
+        sleep(1000);
+
+        robot.Rotate(TURN_SPEED, 30.0);
+
         // Drive Back 26 inches
-        robot.Drive(FORWARD_SPEED,-25.0);
+        robot.Drive(FORWARD_SPEED,-10);
+        robot.Drive( 0.1, -7);
+        //robot.Rotate(0.1, 10.0);
 
         while (robot.isMoving) {
             telemetry.addData("Path", "In Progress");
@@ -98,30 +115,14 @@ public class AutonBlueWarehouseHowell extends LinearOpMode {
         telemetry.addData("Path", "Complete");
         telemetry.update();
 
-        robot.Drive(0.1,-5.0);
-
-        while (robot.isMoving) {
-            telemetry.addData("Path", "In Progress");
-            telemetry.update();
-        }
-
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
-
-
-        // command to strafe to the left 6 inches
-        robot.Strafe(FORWARD_SPEED,-25.0);
-
-        while (robot.isMoving) {
-            telemetry.addData("Path", "In Progress");
-            telemetry.update();
-        }
-
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
-
-        // Drive forward 20 inches(To Make space for alliance to park in warehouse
-        robot.Drive(FORWARD_SPEED,20.0);
+        robot.Strafe(0.2,-15);
+        robot.Drive(0.2 , -8);
+        //robot.Rotate(0.1, 5.0);
+        //robot.Drive(0.1 , -3);
+        robot.Strafe(0.2, -14);
+        robot.Drive(0.2 , -8);
+        robot.Strafe(0.12, -14);
+        robot.Drive(FORWARD_SPEED, 12);
 
         while (robot.isMoving) {
             telemetry.addData("Path", "In Progress");
