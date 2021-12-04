@@ -11,7 +11,7 @@ public class Arm {
         /*
             This assumes two motors in the config file are named LiftShoulderPivot and LiftElbowPivot
          */
-        
+
         mShoulder = hardwareMap.get(DcMotor.class, "LiftShoulderPivot");
         mShoulder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mElbow = hardwareMap.get(DcMotor.class, "LiftElbowPivot");

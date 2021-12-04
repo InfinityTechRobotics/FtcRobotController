@@ -2,16 +2,20 @@ package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import org.firstinspires.ftc.teamcode.hardware.Arm;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 @TeleOp(name="Test Arm")
 public class TestArm extends OpMode {
 
-    public Arm arm;
+    public DcMotor mShoulder = null;
+    public DcMotor mElbow = null;
 
-    @Override
-    public void init() {
-        arm.init(hardwareMap);
+    public void init(){
+        mShoulder = hardwareMap.get(DcMotor.class, "LiftShoulderPivot");
+        mShoulder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        mElbow = hardwareMap.get(DcMotor.class, "LiftElbowPivot");
+        mElbow.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     @Override
@@ -20,10 +24,10 @@ public class TestArm extends OpMode {
         double shoulderinput = gamepad1.left_stick_y;
         double elbowinput = gamepad1.right_stick_y;
 
-        double shoulderpower = 0.1*shoulderinput;
-        double elbowpower = 0.1*elbowinput;
+        double shoulderpower = 0.6*shoulderinput;
+        double elbowpower = 0.6*elbowinput;
 
-        arm.mShoulder.setPower(shoulderpower);
-        arm.mElbow.setPower(elbowpower);
+        mShoulder.setPower(shoulderpower);
+        mElbow.setPower(elbowpower);
     }
 }
