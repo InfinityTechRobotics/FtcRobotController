@@ -39,8 +39,8 @@ public class ArmBot {
     private DcMotor backLeft = null;
     private DcMotor backRight = null;
     private DcMotor carousel = null;
-    private DcMotor joint1 = null;
-    private DcMotor joint2 = null;
+    public DcMotor joint1 = null;
+    public Servo joint2 = null;
     private IMU imu = null;
 
     public boolean isMoving = false;
@@ -92,13 +92,14 @@ public class ArmBot {
         carousel.setPower(0.0);
 
         // Initialize arm motors
-        joint1 = hardwareMap.get(DcMotor.class, "joint1");
-        joint2 = hardwareMap.get(DcMotor.class, "joint2");
-
-        joint1.setPower(0d);
-        joint2.setPower(0d);
-        joint1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        joint2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        joint1 = hardwareMap.get(DcMotor.class, "joint1");
+//
+//        joint2 = hardwareMap.get(Servo.class, "joint2");
+//
+//        joint1.setPower(0d);
+//        joint1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//
+//        joint2.setPosition(0.0d);
 
     }
 

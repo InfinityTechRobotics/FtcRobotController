@@ -2,32 +2,38 @@ package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
-@TeleOp(name="Test Arm")
+import org.firstinspires.ftc.teamcode.hardware.Arm;
+import org.firstinspires.ftc.teamcode.hardware.ArmBot;
+import org.firstinspires.ftc.teamcode.hardware.ArmRunner;
+
+@TeleOp (name = "TestArm")
 public class TestArm extends OpMode {
 
-    public DcMotor mShoulder = null;
-    public DcMotor mElbow = null;
+//    ArmBot armbot = new ArmBot();
+    Arm arm = new Arm();
 
-    public void init(){
-        mShoulder = hardwareMap.get(DcMotor.class, "LiftShoulderPivot");
-        mShoulder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        mElbow = hardwareMap.get(DcMotor.class, "LiftElbowPivot");
-        mElbow.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    @Override
+    public void init() {
+
+//        armbot.init(hardwareMap, telemetry);
+        arm.init(hardwareMap, telemetry);
+
     }
 
     @Override
     public void loop() {
 
-        double shoulderinput = gamepad1.left_stick_y;
-        double elbowinput = gamepad1.right_stick_y;
+        if(gamepad2.x) (new ArmRunner(arm, ArmRunner.ArmPosition.COLLECT, telemetry, () -> true)).start();
+        if(gamepad2.a) (new ArmRunner(arm, ArmRunner.ArmPosition.LOW, telemetry, () -> true)).start();
+        if(gamepad2.b) (new ArmRunner(arm, ArmRunner.ArmPosition.MID, telemetry, () -> true)).start();
+        if(gamepad2.y) (new ArmRunner(arm, ArmRunner.ArmPosition.HIGH, telemetry, () -> true)).start();
 
-        double shoulderpower = 0.6*shoulderinput;
-        double elbowpower = 0.6*elbowinput;
+        telemetry.addData("Joint 1 Pos: ", () -> arm.getJoint1());
+        telemetry.addData("Joint 2 Pos: ", () -> arm.getJoint2());
+        telemetry.update();
 
-        mShoulder.setPower(shoulderpower);
-        mElbow.setPower(elbowpower);
+
     }
+
 }
