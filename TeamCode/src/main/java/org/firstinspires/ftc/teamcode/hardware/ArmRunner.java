@@ -12,14 +12,15 @@ import java.util.function.BooleanSupplier;
 
 public class ArmRunner extends Thread {
 
-    private final double TUCKED_IN_POS = 0.75; // TODO this is wrong. pls fix
+    private final double TUCKED_IN_POS = 0d;
 
     public enum ArmPosition {
         // TODO tune these
-        COLLECT(0, 0d),
-        LOW(0, 0d),
-        MID(0, 0d),
-        HIGH(0, 0d);
+        COLLECT(3, 0.4d),
+        BACK_COLLECT(49, 1d),
+        LOW(72, 0.75d),
+        MID(127, 0.5d),
+        HIGH(158, 0.4d);
 
         private int joint1;
         private double joint2;
@@ -35,29 +36,30 @@ public class ArmRunner extends Thread {
     private Arm arm;
     private ArmPosition target;
     private Telemetry tm;
-    private BooleanSupplier omActive;
+    public static boolean isActive = false;
+    private static int numRunning = 0;
 
-    public ArmRunner(Arm arm, ArmPosition target, Telemetry tm, BooleanSupplier omActive) {
+    public ArmRunner(Arm arm, ArmPosition target, Telemetry tm) {
         this.arm = arm;
         this.target = target;
         this.tm = tm;
-        this.omActive = omActive;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void run() {
-
+        isActive = true;
         try {
 
             arm.setJoint2(TUCKED_IN_POS);
-            arm.setJoint1(tm, omActive, target.getJoint1());
+            // TODO if pid loop, need to wait for a certain range of values here
+            arm.setJoint1(tm, target.getJoint1());
             arm.setJoint2(target.getJoint2());
-
 
         } catch(Exception e) {
             e.printStackTrace();
         }
+        isActive = false;
 
     }
 }

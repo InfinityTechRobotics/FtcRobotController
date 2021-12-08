@@ -29,16 +29,15 @@ public class Arm {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void setJoint1(Telemetry tm, BooleanSupplier opModeActive, int target) {
-        if (opModeActive.getAsBoolean()) {
-            joint1.setTargetPosition(target);
-            joint1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            while (opModeActive.getAsBoolean() && joint1.isBusy()) {
-                joint1.setPower(0.5d);
-            }
-            joint1.setPower(0d);
-            joint1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    public void setJoint1(Telemetry tm, int target) {
+        joint1.setTargetPosition(target);
+        joint1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        while (joint1.isBusy()) {
+            joint1.setPower(0.5d);
         }
+        joint1.setPower(0d);
+        joint1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
     }
 
     public void setJoint2(double target) {
