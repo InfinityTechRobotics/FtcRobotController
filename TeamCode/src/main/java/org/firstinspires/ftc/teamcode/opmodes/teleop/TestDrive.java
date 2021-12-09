@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 
@@ -30,6 +31,12 @@ public class TestDrive extends OpMode {
         rightFront = hardwareMap.get(DcMotor.class,"rf");
         leftRear = hardwareMap.get(DcMotor.class,"lr");
         rightRear = hardwareMap.get(DcMotor.class,"rr");
+
+
+        leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftRear.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     @Override
@@ -55,9 +62,9 @@ public class TestDrive extends OpMode {
         telemetry.addData("Strafe: ", "(%.2f)", right);
         telemetry.addData("Twist: ","(%.2f)",clockwise);
         // Set a scale factor to reduce the sensitivity of the forward and twist motions
-        double forwardscalefactor = 0.5;
+        double forwardscalefactor = 1.0;
         double rightscalefactor = 1.0;
-        double clockwisescalefactor = 0.5;
+        double clockwisescalefactor = 1.0;
         // Send drive vector to the robot object
         vector(forward*forwardscalefactor, right*rightscalefactor, clockwise*clockwisescalefactor);
 

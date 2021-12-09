@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.hardware.Arm;
 import org.firstinspires.ftc.teamcode.hardware.ArmBot;
 import org.firstinspires.ftc.teamcode.hardware.ArmRunner;
 
-@TeleOp (name = "TestArm")
+@TeleOp (name = "TestArm-13")
 public class TestArm extends OpMode {
 
     Arm arm = new Arm();
@@ -22,7 +22,7 @@ public class TestArm extends OpMode {
 
         arm.init(hardwareMap, telemetry);
 
-        arm.setJoint2(0d);
+        //arm.setJoint2(0d);
 
     }
 
@@ -38,6 +38,17 @@ public class TestArm extends OpMode {
         if(gamepad2.b) (new ArmRunner(arm, ArmRunner.ArmPosition.MID, telemetry)).start();
         if(gamepad2.y) (new ArmRunner(arm, ArmRunner.ArmPosition.HIGH, telemetry)).start();
         if(gamepad2.start) (new ArmRunner(arm, ArmRunner.ArmPosition.BACK_COLLECT, telemetry)).start();
+
+
+        /* Intake */
+        boolean rb = gamepad2.right_bumper;
+        boolean lb = gamepad2.left_bumper;
+        // if right bumper is pressed, rb value = true
+        if(rb) arm.collect();
+        // if left bumper is pressed, lb value = true
+        if(lb) arm.eject();
+        // if both rb & lb are false, neither bumper is pressed, so stop intake
+        if(!(rb && lb)) arm.stopIntake();
 
         telemetry.clearAll();
         telemetry.addData("Joint 1 Pos: ", () -> arm.getJoint1());
