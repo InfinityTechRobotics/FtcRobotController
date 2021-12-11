@@ -52,7 +52,7 @@ public class ArmRunner extends Thread {
         try {
 
             arm.setJoint2(TUCKED_IN_POS);
-            // TODO if pid loop, need to wait for a certain range of values here
+            // TODO: if pid loop, need to wait for a certain range of values here
             arm.setJoint1(tm, target.getJoint1());
             arm.setJoint2(target.getJoint2());
 

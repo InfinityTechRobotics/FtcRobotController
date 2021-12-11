@@ -50,6 +50,7 @@ public class PIDFController {
             error = setpoint - measurement;
         }
 
+
         // Calculate direction for feedforward gain
         direction = Math.signum(error);
 
@@ -62,6 +63,8 @@ public class PIDFController {
         double integral = acculumatedError;
 
         // Calculate output from error and gains
+
+
         return (kP * error) + (kD * derivative) + (kI * integral) + (kF * direction);
 
     }

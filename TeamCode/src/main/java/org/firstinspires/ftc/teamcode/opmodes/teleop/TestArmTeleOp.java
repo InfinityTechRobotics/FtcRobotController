@@ -5,17 +5,16 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.PIDFController;
 import org.firstinspires.ftc.teamcode.hardware.Arm;
-import org.firstinspires.ftc.teamcode.hardware.ArmBot;
 import org.firstinspires.ftc.teamcode.hardware.ArmRunner;
 
-@TeleOp (name = "TestArm-14")
-public class TestArm extends OpMode {
+@TeleOp (name = "1- TestArm TeleOp")
+public class TestArmTeleOp extends OpMode {
 
     Arm arm = new Arm();
 
     int armSetpoint = 0;
 
-    private static final PIDFController pid = new PIDFController(0.04d, 0d, 0.004d, 0d);
+    private static final PIDFController pid = new PIDFController(0d, 0d, 0d, 0d);
 
     @Override
     public void init() {
@@ -30,49 +29,27 @@ public class TestArm extends OpMode {
     public void loop() {
 
         // set arm setpoint
-        double joint1Power = 0.0;
+        armSetpoint = 0; // TODO take this value from a button or something
+//        arm.set(pid.calculate(arm.getJoint1(), armSetpoint)); // TODO implement this
 
 
 
-        if(gamepad2.x) {
-            //RANDOM TEST POSITION, REPLACE LATER
-            armSetpoint = 100;
-        }
-        if(gamepad2.a) {
-            //LEVEL 3
-            armSetpoint = 220;
-        }
-        if(gamepad2.b) {
-            // COLLECT POSITION
-            armSetpoint = 0;
-        }
-        if(gamepad2.y){
-            //CLAW CLOSE
-            arm.setClaw(1d);
-        }
-
-        if(gamepad2.dpad_up) {
-            //CLAW OPEN
-            arm.setClaw(0.6d);
-        }
-
-        joint1Power = pid.calculate(arm.getJoint1(), armSetpoint);
-        arm.setArmJoint1(joint1Power);
-        arm.setJoint2(0.0);
-        telemetry.addData("Joint Power", joint1Power);
-        telemetry.addData("getJoint1", arm.getJoint1());
-        telemetry.addData("armSetPoint", armSetpoint);
-        telemetry.addData("getJoint1AfterFunctionCall", arm.getJoint1());
-        telemetry.update();
-
-
-        /*
+        /* Temp Commented
         if(gamepad2.x) (new ArmRunner(arm, ArmRunner.ArmPosition.COLLECT, telemetry)).start();
         if(gamepad2.a) (new ArmRunner(arm, ArmRunner.ArmPosition.LOW, telemetry)).start();
         if(gamepad2.b) (new ArmRunner(arm, ArmRunner.ArmPosition.MID, telemetry)).start();
         if(gamepad2.y) (new ArmRunner(arm, ArmRunner.ArmPosition.HIGH, telemetry)).start();
         if(gamepad2.start) (new ArmRunner(arm, ArmRunner.ArmPosition.BACK_COLLECT, telemetry)).start();
-*/
+
+         */
+        /*Test Servo */
+        if(gamepad2.x) arm.setJoint2(0.0); // tuck position
+        if(gamepad2.a) arm.setJoint2(0.4); // half position
+        if(gamepad2.b) arm.setJoint2(0.8); // full extension
+
+        if(gamepad2.y) arm.setClaw(0.5); // claw open
+
+
 
         /* Intake */
         boolean rb = gamepad2.right_bumper;
