@@ -18,6 +18,7 @@ public class Arm {
     private Servo joint2 = null;
     private Servo claw = null;
     public static final double INTAKE_POWER = 1.0d;
+    public static final double CLAW_STARRING_POS = 0.9d;
 
     private DcMotor intake = null;
     private DcMotor carousel = null;
@@ -38,8 +39,8 @@ public class Arm {
         joint1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //joint2.setPosition(0.0d);
 
-        //close claw
-        claw.setPosition(0.8d);
+        //Start with close claw
+        claw.setPosition(CLAW_STARRING_POS);
 
         // Initialize intake motor
         intake = hardwareMap.get(DcMotor.class, "intake");
@@ -67,14 +68,11 @@ public class Arm {
 
     public void setClaw(double target) {claw.setPosition(target);}
 
-    public void set(double pwr) {joint1.setPower(0.4d);
-    }
+    public void set(double pwr) {joint1.setPower(0.4d);}
 
-    public void setJoin1Power(double pwr) {joint1.setPower(pwr);
-    }
+    public void setJoin1Power(double pwr) {joint1.setPower(pwr);}
 
-    public void setArmJoint1(double pwr) {joint1.setPower(pwr);
-    }
+    public void setArmJoint1(double pwr) {joint1.setPower(pwr);}
 
     public int getJoint1() {
         return joint1.getCurrentPosition();
@@ -84,10 +82,10 @@ public class Arm {
         return joint2.getPosition();
     }
 
-    public void collect() {intake.setPower(INTAKE_POWER); }
+    public void collect() {intake.setPower(-INTAKE_POWER); }
 
     public void eject() {
-        intake.setPower(-INTAKE_POWER);
+        intake.setPower(INTAKE_POWER);
     }
 
     public void stopIntake() {

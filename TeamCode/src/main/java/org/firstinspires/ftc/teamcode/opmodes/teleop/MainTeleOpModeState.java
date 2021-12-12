@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.hardware.Arm;
  * exercise is to ascertain whether the localizer has been configured properly (note: the pure
  * encoder localizer heading may be significantly off if the track width has not been tuned).
  */
-@TeleOp(name = "1-State Practice OpMode", group = "drive")
+@TeleOp(name = "1-State Practice OpMode")
 public class MainTeleOpModeState extends LinearOpMode {
 
     int armSetpoint = 0;
@@ -25,8 +25,12 @@ public class MainTeleOpModeState extends LinearOpMode {
     public static final double joint2Lev3Position = 0.8d;
     public static final double joint2Lev2Position = 0.8d; // TODO: change this
     public static final double joint2Lev1Position = 0.8d; // TODO: change this
-    public static final double joint2TuckPosition = 0.2d; // TODO: change this
-    public static final double joint2CollectPosition = 0.2d; // TODO: change this
+    public static final double joint2TuckPosition = 0.1d; // TODO: change this
+    public static final double joint2CollectPosition = 0.45d; // TODO: change this
+
+    public static final double CLAW_TUCK_POS = 1.0d;
+    public static final double CLAW_COLLECT_POS = 0.8d;
+    public static final double CLAW_OPEN_POS = 0.8d;
 
 
     @Override
@@ -71,7 +75,7 @@ public class MainTeleOpModeState extends LinearOpMode {
             if(gamepad2.a) {
                 //Arm - LEVEL 3 Position
                 armSetpoint = 230; // move joint1 to level 3 position
-                arm.setJoint2(0.9d);
+                arm.setJoint2(0.7d); //0.9 is straight with claw
 
             }
             if(gamepad2.b) {
@@ -80,24 +84,24 @@ public class MainTeleOpModeState extends LinearOpMode {
             }
             if(gamepad2.dpad_down){
                 //CLAW CLOSE
-                arm.setClaw(0.8d);
+                arm.setClaw(CLAW_TUCK_POS);
             }
             if(gamepad2.dpad_up) {
-                //CLAW OPEN
-                arm.setClaw(0.8d);
+                //CLAW OPEN and CLAW COLLECT is same
+                arm.setClaw(CLAW_OPEN_POS);
             }
             //Arm Collect Position inside Robot - Open Claw and bring join2 down
             if(gamepad2.y) {
-                arm.setClaw(0.7d);
-                arm.setJoint2(0.5d);
-                sleep(2000);
-                arm.setJoin1Power(0.2d);
+                arm.setClaw(CLAW_COLLECT_POS);
+                arm.setJoint2(joint2CollectPosition);
+                sleep(500);
+                arm.setJoin1Power(-0.8d);
             }
-            //Arm Tuck Position inside Robot - close claw and bring join2 to tuck position
+            //Arm Tuck Position inside Robot - close claw and bring joint2 to tuck position
             if(gamepad2.dpad_left) {
-                arm.setClaw(0.8d);
-                sleep(2000);
-                arm.setJoint2(0.1d);
+                arm.setClaw(CLAW_TUCK_POS);
+                sleep(500);
+                arm.setJoint2(joint2TuckPosition);
             }
 
             /* Wheel of Fortune */
@@ -112,15 +116,16 @@ public class MainTeleOpModeState extends LinearOpMode {
             // if left bumper is pressed, lb value = true
             if(lb) arm.eject();
             // if both rb & lb are false, neither bumper is pressed, so stop intake
-            if(!(rb && lb)) arm.stopIntake();
+            //if(!(rb && lb)) arm.stopIntake();
+            if(!rb && !lb) arm.stopIntake();
 
             joint1Power = pid.calculate(arm.getJoint1(), armSetpoint);
             arm.setArmJoint1(joint1Power);
-//            arm.setJoint2(0.0);
             telemetry.addData("Joint Power", joint1Power);
             telemetry.addData("getJoint1", arm.getJoint1());
             telemetry.addData("armSetPoint", armSetpoint);
             telemetry.addData("getJoint1AfterFunctionCall", arm.getJoint1());
+            telemetry.addData("Joint 2 position",arm.getJoint2());
             telemetry.update();
         }
     }
