@@ -70,11 +70,16 @@ public class MainTeleOpModeState extends LinearOpMode {
             if(gamepad2.x) {
                 //Arm - RANDOM TEST POSITION, REPLACE LATER
                 arm.setJoint2(0d);
-                armSetpoint = 100;
+                armSetpoint = 150;
+            }
+            if(gamepad2.y) {
+                //Arm - Level 1 Position, Shared Shipping Hub
+                armSetpoint = 150;
+                arm.setJoint2(0.7d);
             }
             if(gamepad2.a) {
                 //Arm - LEVEL 3 Position
-                armSetpoint = 230; // move joint1 to level 3 position
+                armSetpoint = 235; // move joint1 to level 3 position
                 arm.setJoint2(0.7d); //0.9 is straight with claw
 
             }
@@ -82,23 +87,25 @@ public class MainTeleOpModeState extends LinearOpMode {
                 // Arm goes to Tuck Position inside Robot
                 armSetpoint = 0;
             }
-            if(gamepad2.dpad_down){
+            //Game Pad1 - After Deliver
+            if(gamepad1.b){
                 //CLAW CLOSE
                 arm.setClaw(CLAW_TUCK_POS);
             }
-            if(gamepad2.dpad_up) {
+            //Game Pad1 - Deliver
+            if(gamepad1.a) {
                 //CLAW OPEN and CLAW COLLECT is same
                 arm.setClaw(CLAW_OPEN_POS);
             }
             //Arm Collect Position inside Robot - Open Claw and bring join2 down
-            if(gamepad2.y) {
+            if(gamepad2.dpad_down) {
                 arm.setClaw(CLAW_COLLECT_POS);
                 arm.setJoint2(joint2CollectPosition);
                 sleep(500);
                 arm.setJoin1Power(-0.8d);
             }
             //Arm Tuck Position inside Robot - close claw and bring joint2 to tuck position
-            if(gamepad2.dpad_left) {
+            if(gamepad2.dpad_up) {
                 arm.setClaw(CLAW_TUCK_POS);
                 sleep(500);
                 arm.setJoint2(joint2TuckPosition);
@@ -116,11 +123,11 @@ public class MainTeleOpModeState extends LinearOpMode {
             // if left bumper is pressed, lb value = true
             if(lb) arm.eject();
             // if both rb & lb are false, neither bumper is pressed, so stop intake
-            //if(!(rb && lb)) arm.stopIntake();
             if(!rb && !lb) arm.stopIntake();
 
             joint1Power = pid.calculate(arm.getJoint1(), armSetpoint);
             arm.setArmJoint1(joint1Power);
+
             telemetry.addData("Joint Power", joint1Power);
             telemetry.addData("getJoint1", arm.getJoint1());
             telemetry.addData("armSetPoint", armSetpoint);

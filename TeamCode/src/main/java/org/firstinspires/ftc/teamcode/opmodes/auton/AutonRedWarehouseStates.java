@@ -46,13 +46,6 @@ public class AutonRedWarehouseStates extends LinearOpMode {
                 .build();
 
 
-        /*
-        Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
-                .splineTo(new Vector2d(-20, -20), 0)
-                .build();
-         */
-
-
         waitForStart();
 
         if (isStopRequested()) return;
