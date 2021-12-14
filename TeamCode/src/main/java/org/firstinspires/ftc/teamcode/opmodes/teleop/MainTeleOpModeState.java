@@ -22,11 +22,11 @@ public class MainTeleOpModeState extends LinearOpMode {
     int armSetpoint = 0;
 
     private static final PIDFController pid = new PIDFController(0.02d, 0d, 0.00165d, 0d);
-    public static final double joint2Lev3Position = 0.8d;
-    public static final double joint2Lev2Position = 0.8d; // TODO: change this
-    public static final double joint2Lev1Position = 0.8d; // TODO: change this
-    public static final double joint2TuckPosition = 0.1d; // TODO: change this
-    public static final double joint2CollectPosition = 0.45d; // TODO: change this
+    public static final double joint2Lev3DeliverPos = 0.7d;
+    public static final double joint2Lev2DeliverPos = 0.7d; // TODO: change this
+    public static final double joint2Lev1DeliverPos = 0.7d;
+    public static final double joint2TuckPosition = 0.1d;
+    public static final double joint2CollectPosition = 0.45d;
 
     public static final double CLAW_TUCK_POS = 1.0d;
     public static final double CLAW_COLLECT_POS = 0.8d;
@@ -68,19 +68,19 @@ public class MainTeleOpModeState extends LinearOpMode {
             double joint1Power = 0.0;
 
             if(gamepad2.x) {
-                //Arm - RANDOM TEST POSITION, REPLACE LATER
+                //Arm - Transfer Position before going to base
                 arm.setJoint2(0d);
                 armSetpoint = 150;
             }
             if(gamepad2.y) {
                 //Arm - Level 1 Position, Shared Shipping Hub
                 armSetpoint = 150;
-                arm.setJoint2(0.7d);
+                arm.setJoint2(joint2Lev1DeliverPos);
             }
             if(gamepad2.a) {
                 //Arm - LEVEL 3 Position
                 armSetpoint = 235; // move joint1 to level 3 position
-                arm.setJoint2(0.7d); //0.9 is straight with claw
+                arm.setJoint2(joint2Lev3DeliverPos);
 
             }
             if(gamepad2.b) {
@@ -101,8 +101,8 @@ public class MainTeleOpModeState extends LinearOpMode {
             if(gamepad2.dpad_down) {
                 arm.setClaw(CLAW_COLLECT_POS);
                 arm.setJoint2(joint2CollectPosition);
-                sleep(500);
-                arm.setJoin1Power(-0.8d);
+                //sleep(500);
+                //arm.setJoin1Power(-0.8d);
             }
             //Arm Tuck Position inside Robot - close claw and bring joint2 to tuck position
             if(gamepad2.dpad_up) {
