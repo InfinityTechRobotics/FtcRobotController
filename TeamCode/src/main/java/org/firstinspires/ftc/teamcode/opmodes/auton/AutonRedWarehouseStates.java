@@ -50,20 +50,20 @@ public class AutonRedWarehouseStates extends LinearOpMode {
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         Trajectory traj1 = drive.trajectoryBuilder(new Pose2d())
-                .strafeLeft(STRAFE_LEFT_DISTANCE)
+                .lineTo(new Vector2d(15,15))
                 .build();
 
         Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
-                .strafeRight(STRAFE_RIGHT_DISTANCE)
+                .lineTo(new Vector2d(25,25))
                 .build();
 
 
         Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
-                .forward(FORWARD_DISTANCE)
+                .lineTo(new Vector2d(15,15))
                 .build();
 
         Trajectory traj4 = drive.trajectoryBuilder(traj3.end())
-                .strafeLeft(IN_WAREHOUSE_DISTANCE)
+                .lineTo(new Vector2d(5,5))
                 .build();
 
 
@@ -73,11 +73,10 @@ public class AutonRedWarehouseStates extends LinearOpMode {
 
         drive.followTrajectory(traj1);
 
-
         //set arm setpoint
         double joint1Power = 0.0;
 
-        armSetpoint = 235; // move joint1 to level 3 position
+        armSetpoint = 230; // move joint1 to level 3 position
         boolean contWhileLoop = true;
 
         while (opModeIsActive() && contWhileLoop) {
@@ -90,9 +89,31 @@ public class AutonRedWarehouseStates extends LinearOpMode {
 
         }
 
+        arm.setJoint2(joint2Lev3DeliverPos);
+
         drive.followTrajectory(traj2);
+
+        arm.setClaw(CLAW_OPEN_POS);
+        sleep(500);
+
         drive.followTrajectory(traj3);
+
+        arm.setJoint2(0d);
+        sleep(500);
+        armSetpoint = 150; // move to X position
+        contWhileLoop = true;
+
+        while (opModeIsActive() && contWhileLoop) {
+
+            joint1Power = pid.calculate(arm.getJoint1(), armSetpoint);
+            arm.setArmJoint1(joint1Power);
+
+            if(Math.abs(armSetpoint-arm.getJoint1())<20)
+                contWhileLoop=false;
+        }
+
         drive.followTrajectory(traj4);
+        sleep(30000);
 
 
         Pose2d poseEstimate = drive.getPoseEstimate();

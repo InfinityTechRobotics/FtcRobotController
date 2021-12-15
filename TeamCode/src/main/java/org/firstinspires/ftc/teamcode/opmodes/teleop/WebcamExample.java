@@ -290,11 +290,11 @@ public class WebcamExample extends LinearOpMode
 //        static final Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(253,98);
 
         //static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(29,120);
-        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(105,145);
+        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(105,65);
         //static final Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(138,128);
-        static final Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(200,145);
+        static final Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(200,65);
         //static final Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(241,128);
-        static final Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(295,145);
+        static final Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(295,65);
 
         static final int REGION_WIDTH = 25;
         static final int REGION_HEIGHT = 25;

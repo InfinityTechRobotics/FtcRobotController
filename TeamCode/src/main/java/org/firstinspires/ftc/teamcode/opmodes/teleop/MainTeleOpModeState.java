@@ -87,16 +87,24 @@ public class MainTeleOpModeState extends LinearOpMode {
                 // Arm goes to Tuck Position inside Robot
                 armSetpoint = 0;
             }
+            //Game Pad1 - Deliver
+            if(gamepad1.a){
+                //CLAW CLOSE
+                arm.setClaw(CLAW_OPEN_POS);
+            }
             //Game Pad1 - After Deliver
             if(gamepad1.b){
                 //CLAW CLOSE
                 arm.setClaw(CLAW_TUCK_POS);
             }
-            //Game Pad1 - Deliver
-            if(gamepad1.a) {
-                //CLAW OPEN and CLAW COLLECT is same
-                arm.setClaw(CLAW_OPEN_POS);
+            //Game Pad1 - Capping Position
+            //TO DO
+            if(gamepad1.dpad_up) {
+                //Arm - Capping Position
+                armSetpoint = 260; // move joint1 to level 3 position
+                arm.setJoint2(0.7);
             }
+
             //Arm Collect Position inside Robot - Open Claw and bring join2 down
             if(gamepad2.dpad_down) {
                 arm.setClaw(CLAW_COLLECT_POS);
