@@ -134,6 +134,7 @@ public class MainTeleOpModeState extends LinearOpMode {
             telemetry.addData("getJoint1AfterFunctionCall", arm.getJoint1());
             telemetry.addData("Joint 2 position",arm.getJoint2());
             telemetry.update();
+
         }
     }
 }
