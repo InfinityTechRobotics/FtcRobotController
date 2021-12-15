@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.hardware.ArmBot;
 import org.firstinspires.ftc.teamcode.hardware.ArmRunner;
 
 @TeleOp (name = "TestArm-14")
+@Disabled
 public class TestArm extends OpMode {
 
     Arm arm = new Arm();

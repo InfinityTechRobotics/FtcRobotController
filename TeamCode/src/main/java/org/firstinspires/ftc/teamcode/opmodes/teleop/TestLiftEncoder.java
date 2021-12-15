@@ -4,12 +4,14 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 
 @TeleOp(name="Test Lift Encoder")
+@Disabled
 public class TestLiftEncoder extends OpMode {
 
     private Robot robot = null;
