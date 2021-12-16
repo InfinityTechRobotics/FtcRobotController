@@ -113,7 +113,7 @@ public class AutonRedWarehouseStates extends LinearOpMode {
                 .strafeRight(10)
                 .build();
         Trajectory traj6l = drive.trajectoryBuilder(traj5l.end())
-                .forward(33)
+                .forward(38)
                 .build();
         Trajectory traj7l = drive.trajectoryBuilder(traj6l.end())
                 .strafeLeft(22)
@@ -172,7 +172,7 @@ public class AutonRedWarehouseStates extends LinearOpMode {
                 .strafeRight(16)
                 .build();
         Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
-                .forward(33)
+                .forward(35)
                 .build();
         Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
                 .strafeLeft(22)
@@ -229,9 +229,8 @@ public class AutonRedWarehouseStates extends LinearOpMode {
 
             }
 
-            sleep(10000);
+            sleep(1000);
             arm.setJoint2(0.7d);
-
 
             drive.followTrajectory(traj2l);
 
@@ -242,8 +241,8 @@ public class AutonRedWarehouseStates extends LinearOpMode {
 
             arm.setJoint2(joint2TuckPosition);
 
-            sleep(1000);
-            ;
+            sleep(400);
+
             armSetpoint = 0; // Come to Base
             contWhileLoop = true;
 
@@ -296,7 +295,7 @@ public class AutonRedWarehouseStates extends LinearOpMode {
 
             arm.setJoint2(joint2TuckPosition);
 
-            sleep(1000);
+            sleep(400);
             armSetpoint = 0; // Come to Base
             contWhileLoop = true;
 
@@ -349,7 +348,7 @@ public class AutonRedWarehouseStates extends LinearOpMode {
             drive.followTrajectory(traj3);
 
             arm.setJoint2(joint2TuckPosition);
-            sleep(1000);
+            sleep(400);
 
             armSetpoint = 0; // Come to Base
             contWhileLoop = true;

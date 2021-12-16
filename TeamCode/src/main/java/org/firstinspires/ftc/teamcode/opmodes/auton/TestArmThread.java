@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -19,6 +20,7 @@ import org.firstinspires.ftc.teamcode.util.AutonArmRunner;
  */
 @Config
 @Autonomous(name="TEST ARM THREAD", group = "TESTS")
+@Disabled
 public class TestArmThread extends LinearOpMode {
 
     public static double FORWARD_DISTANCE = 28; // in - Towards Warehouse

@@ -226,9 +226,8 @@ public class AutonBlueWarehouseStates extends LinearOpMode {
 
             }
 
-            sleep(10000);
+            sleep(10000);//Sleep is needed before PID is gracefully completed
             arm.setJoint2(0.7d);
-
 
             drive.followTrajectory(traj2l);
 

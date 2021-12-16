@@ -327,7 +327,7 @@ public class AutonBlueCarouselStates extends LinearOpMode {
             telemetry.update();
             drive.followTrajectory(traj1);
 
-            armSetpoint = 230; // move joint1 to level 3 position
+            armSetpoint = 235; // move joint1 to level 3 position
             boolean contWhileLoop = true;
 
             //runtime = new ElapsedTime();

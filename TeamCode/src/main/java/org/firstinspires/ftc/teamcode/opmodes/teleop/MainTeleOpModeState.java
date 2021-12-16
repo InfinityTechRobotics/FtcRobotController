@@ -101,8 +101,21 @@ public class MainTeleOpModeState extends LinearOpMode {
             //TO DO
             if(gamepad1.dpad_up) {
                 //Arm - Capping Position
-                armSetpoint = 260; // move joint1 to level 3 position
-                arm.setJoint2(0.7);
+                armSetpoint = 290; // move joint1 to level 3 position
+                arm.setJoint2(0.6);
+            }
+
+            //TO DO
+            if(gamepad1.dpad_down) {
+                //Arm - Grab custom shipping element from floor
+                armSetpoint = 50;
+                arm.setClaw(0.6);
+
+            }
+
+            //TO DO
+            if(gamepad1.dpad_left) {
+                arm.setJoint2(0.9);
             }
 
             //Arm Collect Position inside Robot - Open Claw and bring join2 down

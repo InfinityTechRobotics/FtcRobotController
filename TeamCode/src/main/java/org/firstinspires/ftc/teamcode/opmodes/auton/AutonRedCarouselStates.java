@@ -100,33 +100,35 @@ public class AutonRedCarouselStates extends LinearOpMode {
                 .build();
 
         Trajectory traj2l = drive.trajectoryBuilder(traj1l.end())
-                .lineTo(new Vector2d(25,25))
+                .lineTo(new Vector2d(22,22))
                 .build();
 
 
         Trajectory traj3l = drive.trajectoryBuilder(traj2l.end())
-                .strafeRight(11)
+                .strafeRight(6)
                 .build();
 
         Trajectory traj4l = drive.trajectoryBuilder(traj3l.end())
-                .back(43)
+                .back(16)
                 .build();
 
         Trajectory traj5l = drive.trajectoryBuilder(traj4l.end())
-                .back(1)
+                .back(32)
                 .build();
 
         Trajectory traj6l = drive.trajectoryBuilder(traj5l.end())
-                .forward(36)
+                .forward(2)
                 .build();
 
-
         Trajectory traj7l = drive.trajectoryBuilder(traj6l.end())
-                .strafeRight(18)
+                .strafeRight(6)//Towards Carousel
                 .build();
 
         Trajectory traj8l = drive.trajectoryBuilder(traj7l.end())
-                .forward(64)
+                .strafeLeft(20)
+                .build();
+        Trajectory traj9l = drive.trajectoryBuilder(traj8l.end())
+                .back(4)
                 .build();
 ////////////////////////////////////////////////////////////////
         //Middle Level Shipping Traj
@@ -136,33 +138,36 @@ public class AutonRedCarouselStates extends LinearOpMode {
                 .build();
 
         Trajectory traj2m = drive.trajectoryBuilder(traj1m.end())
-                .lineTo(new Vector2d(25,25))
+                .lineTo(new Vector2d(22,22))
                 .build();
 
 
         Trajectory traj3m = drive.trajectoryBuilder(traj2m.end())
-                .strafeRight(10)
+                .strafeRight(6)
                 .build();
 
         Trajectory traj4m = drive.trajectoryBuilder(traj3m.end())
-                .back(43)
+                .back(16)
                 .build();
 
         Trajectory traj5m = drive.trajectoryBuilder(traj4m.end())
-                .back(1.5)
+                .back(32)
                 .build();
 
         Trajectory traj6m = drive.trajectoryBuilder(traj5m.end())
-                .forward(36)
+                .forward(4)
                 .build();
 
-
         Trajectory traj7m = drive.trajectoryBuilder(traj6m.end())
-                .strafeRight(18)
+                .strafeRight(6)//Towards Carousel
                 .build();
 
         Trajectory traj8m = drive.trajectoryBuilder(traj7m.end())
-                .forward(64)
+                .strafeLeft(20)
+                .build();
+
+        Trajectory traj9m = drive.trajectoryBuilder(traj8m.end())
+                .back(4)
                 .build();
 ////////////////////////////////////////////////////////////////
 
@@ -173,40 +178,36 @@ public class AutonRedCarouselStates extends LinearOpMode {
                 .build();
 
         Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
-                .lineTo(new Vector2d(25,25))
+                .lineTo(new Vector2d(24,24))
                 .build();
 
 
         Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
-                .strafeRight(10)
+                .strafeRight(6)
                 .build();
 
         Trajectory traj4 = drive.trajectoryBuilder(traj3.end())
-                .back(45)
+                .back(16)
                 .build();
 
-
         Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
-                .back(2)
+                .back(32)
                 .build();
 
         Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
-                .forward(36)
+                .forward(2)
                 .build();
 
-
         Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
-                .strafeRight(18)
+                .strafeRight(6)//Towards Carousel
                 .build();
 
         Trajectory traj8 = drive.trajectoryBuilder(traj7.end())
-                .forward(64)
+                .strafeLeft(20)
                 .build();
 
-
-        //Park in Storage
-        Trajectory trajs1 = drive.trajectoryBuilder(traj5.end())
-                .strafeLeft(12)
+        Trajectory traj9 = drive.trajectoryBuilder(traj8.end())
+                .back(4)
                 .build();
 
 ////////////////////////////////////////////////////
@@ -214,6 +215,7 @@ public class AutonRedCarouselStates extends LinearOpMode {
         waitForStart();
 
         ElapsedTime runtime = new ElapsedTime();
+
         while (opModeIsActive() && (runtime.seconds() < 1)) {
             duckPos = skystoneDeterminationPipeline.getAnalysis().toString();
             telemetry.addData("Duck Position XXX", duckPos);
@@ -225,6 +227,7 @@ public class AutonRedCarouselStates extends LinearOpMode {
             telemetry.addData("Duck Position YYY", duckPos);
             telemetry.update();
         }
+
 
         telemetry.addData("Final Duck Position", duckPos);
         telemetry.update();
@@ -247,19 +250,15 @@ public class AutonRedCarouselStates extends LinearOpMode {
             armSetpoint = 120; // move joint1 to level 3 position
             boolean contWhileLoop = true;
 
-            //runtime = new ElapsedTime();
-
             while (opModeIsActive() && contWhileLoop) {
-                //while (opModeIsActive() && (runtime.seconds() < 2.0)) {
-
                 joint1Power = pid.calculate(arm.getJoint1(), armSetpoint);
                 arm.setArmJoint1(joint1Power);
 
                 if(Math.abs(armSetpoint-arm.getJoint1())<20)
                     contWhileLoop=false;
-
             }
 
+            sleep(1000);
             arm.setJoint2(joint2Lev3DeliverPos);
 
             drive.followTrajectory(traj2l);
@@ -268,16 +267,17 @@ public class AutonRedCarouselStates extends LinearOpMode {
             sleep(200);
 
             drive.followTrajectory(traj3l);
+            drive.followTrajectory(traj4l);
 
             arm.setJoint2(0d);
-            sleep(500);
+            sleep(400);
             armSetpoint = 0; // Send Arm to Base
             contWhileLoop = true;
 
             runtime = new ElapsedTime();
 
             //while (opModeIsActive() && contWhileLoop) {
-            while (opModeIsActive() && (runtime.seconds() < 1)) {
+            while (opModeIsActive() && (runtime.seconds() < 3)) {
 
                 joint1Power = pid.calculate(arm.getJoint1(), armSetpoint);
                 arm.setArmJoint1(joint1Power);
@@ -286,28 +286,15 @@ public class AutonRedCarouselStates extends LinearOpMode {
                     contWhileLoop=false;
             }
 
-            drive.followTrajectory(traj4l);
-
-            runtime = new ElapsedTime();
-
-            while (opModeIsActive() && (runtime.seconds() < 2)) {
-                telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
-                telemetry.update();
-                arm.setWOFPower(-0.7);
-            }
-
+            arm.setWOFPower(-0.8);//Start WOF After Arm is Lowered
             drive.followTrajectory(traj5l);
-
-            runtime = new ElapsedTime();
-            while (opModeIsActive() && (runtime.seconds() < 2)) {
-                telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
-                telemetry.update();
-                arm.setWOFPower(-0.7);
-            }
-
+            sleep(2000);
             drive.followTrajectory(traj6l);
+
             drive.followTrajectory(traj7l);
+            sleep(2000);
             drive.followTrajectory(traj8l);
+            drive.followTrajectory(traj9l);
 
         }
         if(duckPos=="CENTER") {
@@ -318,10 +305,7 @@ public class AutonRedCarouselStates extends LinearOpMode {
             armSetpoint = 165; // move joint1 to level 3 position
             boolean contWhileLoop = true;
 
-            //runtime = new ElapsedTime();
-
             while (opModeIsActive() && contWhileLoop) {
-                //while (opModeIsActive() && (runtime.seconds() < 2.0)) {
 
                 joint1Power = pid.calculate(arm.getJoint1(), armSetpoint);
                 arm.setArmJoint1(joint1Power);
@@ -339,54 +323,29 @@ public class AutonRedCarouselStates extends LinearOpMode {
             sleep(200);
 
             drive.followTrajectory(traj3m);
-
-            arm.setJoint2(0d);
-            sleep(500);
-            armSetpoint = 0; // Send Arm to Base
-            contWhileLoop = true;
-
-            runtime = new ElapsedTime();
-
-            //while (opModeIsActive() && contWhileLoop) {
-            while (opModeIsActive() && (runtime.seconds() < 1)) {
-
-                joint1Power = pid.calculate(arm.getJoint1(), armSetpoint);
-                arm.setArmJoint1(joint1Power);
-
-                if(Math.abs(armSetpoint-arm.getJoint1())<20)
-                    contWhileLoop=false;
-            }
-
             drive.followTrajectory(traj4m);
 
+            arm.setJoint2(0d);
+            sleep(400);
+            armSetpoint = 0; // Send Arm to Base
 
             runtime = new ElapsedTime();
 
             while (opModeIsActive() && (runtime.seconds() < 2)) {
-                telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
-                telemetry.update();
-                arm.setWOFPower(-0.8);
+                joint1Power = pid.calculate(arm.getJoint1(), armSetpoint);
+                arm.setArmJoint1(joint1Power);
             }
 
+
+            arm.setWOFPower(-0.8);//Start WOF After Arm is Lowered
             drive.followTrajectory(traj5m);
-
-            runtime = new ElapsedTime();
-            while (opModeIsActive() && (runtime.seconds() < 2)) {
-                telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
-                telemetry.update();
-                arm.setWOFPower(-0.8);
-            }
-
-            //Parking in Storage
-            //Uncomment below lines
-            drive.followTrajectory(trajs1);
-            sleep(20000);
-
-            //Parking in Storage Ends
-
+            sleep(2000);
             drive.followTrajectory(traj6m);
+
             drive.followTrajectory(traj7m);
+            sleep(2000);
             drive.followTrajectory(traj8m);
+            drive.followTrajectory(traj9m);
 
         }
         if(duckPos=="RIGHT") {
@@ -395,13 +354,13 @@ public class AutonRedCarouselStates extends LinearOpMode {
                 telemetry.update();
                 drive.followTrajectory(traj1);
 
-                armSetpoint = 230; // move joint1 to level 3 position
+                armSetpoint = 235; // move joint1 to level 3 position
                 boolean contWhileLoop = true;
 
                 //runtime = new ElapsedTime();
 
                 while (opModeIsActive() && contWhileLoop) {
-                    //while (opModeIsActive() && (runtime.seconds() < 2.0)) {
+                    //while (opModeIsActive() && (runtime.seconds() < 10.0)) {
 
                     joint1Power = pid.calculate(arm.getJoint1(), armSetpoint);
                     arm.setArmJoint1(joint1Power);
@@ -419,54 +378,29 @@ public class AutonRedCarouselStates extends LinearOpMode {
                 sleep(200);
 
                 drive.followTrajectory(traj3);
+                drive.followTrajectory(traj4);
 
                 arm.setJoint2(0d);
-                sleep(200);
+                sleep(400);
                 armSetpoint = 0; // Send Arm to Base
-                contWhileLoop = true;
 
                 runtime = new ElapsedTime();
 
-                //while (opModeIsActive() && contWhileLoop) {
-                while (opModeIsActive() && (runtime.seconds() < 1)) {
+                while (opModeIsActive() && (runtime.seconds() < 2)) {
 
                     joint1Power = pid.calculate(arm.getJoint1(), armSetpoint);
                     arm.setArmJoint1(joint1Power);
-
-                    if(Math.abs(armSetpoint-arm.getJoint1())<20)
-                        contWhileLoop=false;
                 }
 
-                drive.followTrajectory(traj4);
-
-
-            runtime = new ElapsedTime();
-
-            while (opModeIsActive() && (runtime.seconds() < 2)) {
-                telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
-                telemetry.update();
-                arm.setWOFPower(-0.8);
-            }
 
             drive.followTrajectory(traj5);
-
-            runtime = new ElapsedTime();
-            while (opModeIsActive() && (runtime.seconds() < 1.5)) {
-                telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
-                telemetry.update();
-                arm.setWOFPower(-0.8);
-            }
-
-            //Parking in Storage
-            //Uncomment below lines
-            drive.followTrajectory(trajs1);
-            sleep(20000);
-
-            //Parking in Storage Ends
-
+            sleep(1000);
             drive.followTrajectory(traj6);
+
             drive.followTrajectory(traj7);
+            sleep(1500);
             drive.followTrajectory(traj8);
+            drive.followTrajectory(traj9);
 
         }
 
