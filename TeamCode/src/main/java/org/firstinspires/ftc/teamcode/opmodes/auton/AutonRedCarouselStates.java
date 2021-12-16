@@ -105,30 +105,39 @@ public class AutonRedCarouselStates extends LinearOpMode {
 
 
         Trajectory traj3l = drive.trajectoryBuilder(traj2l.end())
-                .strafeRight(6)
+                .strafeRight(26)
                 .build();
 
         Trajectory traj4l = drive.trajectoryBuilder(traj3l.end())
-                .back(16)
+                .back(10)
                 .build();
 
         Trajectory traj5l = drive.trajectoryBuilder(traj4l.end())
-                .back(32)
+                .back(30)
                 .build();
 
         Trajectory traj6l = drive.trajectoryBuilder(traj5l.end())
-                .forward(2)
+                .strafeLeft(10)
                 .build();
 
         Trajectory traj7l = drive.trajectoryBuilder(traj6l.end())
-                .strafeRight(6)//Towards Carousel
+                .back(8)
                 .build();
 
         Trajectory traj8l = drive.trajectoryBuilder(traj7l.end())
+                .forward(1)
+                .build();
+
+        Trajectory traj9l = drive.trajectoryBuilder(traj8l.end())
+                .back(2)
+                .build();
+
+        Trajectory traj10l = drive.trajectoryBuilder(traj9l.end())
                 .strafeLeft(20)
                 .build();
-        Trajectory traj9l = drive.trajectoryBuilder(traj8l.end())
-                .back(4)
+
+        Trajectory traj11l = drive.trajectoryBuilder(traj10l.end())
+                .back(2)
                 .build();
 ////////////////////////////////////////////////////////////////
         //Middle Level Shipping Traj
@@ -143,31 +152,39 @@ public class AutonRedCarouselStates extends LinearOpMode {
 
 
         Trajectory traj3m = drive.trajectoryBuilder(traj2m.end())
-                .strafeRight(6)
+                .strafeRight(26)
                 .build();
 
         Trajectory traj4m = drive.trajectoryBuilder(traj3m.end())
-                .back(16)
+                .back(10)
                 .build();
 
         Trajectory traj5m = drive.trajectoryBuilder(traj4m.end())
-                .back(32)
+                .back(28)
                 .build();
 
         Trajectory traj6m = drive.trajectoryBuilder(traj5m.end())
-                .forward(4)
+                .strafeLeft(10)
                 .build();
 
         Trajectory traj7m = drive.trajectoryBuilder(traj6m.end())
-                .strafeRight(6)//Towards Carousel
+                .back(8)
                 .build();
 
         Trajectory traj8m = drive.trajectoryBuilder(traj7m.end())
-                .strafeLeft(20)
+                .forward(1)
                 .build();
 
         Trajectory traj9m = drive.trajectoryBuilder(traj8m.end())
-                .back(4)
+                .back(2)
+                .build();
+
+        Trajectory traj10m = drive.trajectoryBuilder(traj9m.end())
+                .strafeLeft(20)
+                .build();
+
+        Trajectory traj11m = drive.trajectoryBuilder(traj10m.end())
+                .back(2)
                 .build();
 ////////////////////////////////////////////////////////////////
 
@@ -178,36 +195,44 @@ public class AutonRedCarouselStates extends LinearOpMode {
                 .build();
 
         Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
-                .lineTo(new Vector2d(24,24))
+                .lineTo(new Vector2d(25,25))
                 .build();
 
 
         Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
-                .strafeRight(6)
+                .strafeRight(26)
                 .build();
 
         Trajectory traj4 = drive.trajectoryBuilder(traj3.end())
-                .back(16)
+                .back(10)
                 .build();
 
         Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
-                .back(32)
+                .back(30)
                 .build();
 
         Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
-                .forward(2)
+                .strafeLeft(8)
                 .build();
 
         Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
-                .strafeRight(6)//Towards Carousel
+                .back(6)
                 .build();
 
         Trajectory traj8 = drive.trajectoryBuilder(traj7.end())
-                .strafeLeft(20)
+                .forward(1)
                 .build();
 
         Trajectory traj9 = drive.trajectoryBuilder(traj8.end())
-                .back(4)
+                .back(2)
+                .build();
+
+        Trajectory traj10 = drive.trajectoryBuilder(traj9.end())
+                .strafeLeft(21)
+                .build();
+
+        Trajectory traj11 = drive.trajectoryBuilder(traj10.end())
+                .back(2)
                 .build();
 
 ////////////////////////////////////////////////////
@@ -286,15 +311,20 @@ public class AutonRedCarouselStates extends LinearOpMode {
                     contWhileLoop=false;
             }
 
-            arm.setWOFPower(-0.8);//Start WOF After Arm is Lowered
+
             drive.followTrajectory(traj5l);
-            sleep(2000);
             drive.followTrajectory(traj6l);
+            arm.setWOFPower(-0.8);//Start WOF
 
             drive.followTrajectory(traj7l);
-            sleep(2000);
+            sleep(1500);
+
             drive.followTrajectory(traj8l);
             drive.followTrajectory(traj9l);
+            sleep(1500);
+            arm.setWOFPower(0.0);//Stop WOF
+            drive.followTrajectory(traj10l);
+            drive.followTrajectory(traj11l);
 
         }
         if(duckPos=="CENTER") {
@@ -337,15 +367,18 @@ public class AutonRedCarouselStates extends LinearOpMode {
             }
 
 
-            arm.setWOFPower(-0.8);//Start WOF After Arm is Lowered
             drive.followTrajectory(traj5m);
-            sleep(2000);
             drive.followTrajectory(traj6m);
-
+            arm.setWOFPower(-0.8);//Start WOF
             drive.followTrajectory(traj7m);
-            sleep(2000);
+            sleep(1500);
+
             drive.followTrajectory(traj8m);
             drive.followTrajectory(traj9m);
+            sleep(1500);
+            arm.setWOFPower(0.0);//Stop WOF
+            drive.followTrajectory(traj10m);
+            drive.followTrajectory(traj11m);
 
         }
         if(duckPos=="RIGHT") {
@@ -371,7 +404,6 @@ public class AutonRedCarouselStates extends LinearOpMode {
                 }
 
                 arm.setJoint2(joint2Lev3DeliverPos);
-
                 drive.followTrajectory(traj2);
 
                 arm.setClaw(CLAW_OPEN_POS);
@@ -394,13 +426,18 @@ public class AutonRedCarouselStates extends LinearOpMode {
 
 
             drive.followTrajectory(traj5);
-            sleep(1000);
             drive.followTrajectory(traj6);
+            arm.setWOFPower(-0.8);//Start WOF
 
             drive.followTrajectory(traj7);
             sleep(1500);
+
             drive.followTrajectory(traj8);
             drive.followTrajectory(traj9);
+            sleep(1500);
+            arm.setWOFPower(0.0);//Start WOF
+            drive.followTrajectory(traj10);
+            drive.followTrajectory(traj11);
 
         }
 

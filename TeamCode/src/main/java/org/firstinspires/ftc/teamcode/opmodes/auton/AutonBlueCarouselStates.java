@@ -102,18 +102,18 @@ public class AutonBlueCarouselStates extends LinearOpMode {
 
 
         Trajectory traj3l = drive.trajectoryBuilder(traj2l.end())
-                .strafeRight(10)
+                .strafeRight(12)
                 .build();
 
         Trajectory traj4l = drive.trajectoryBuilder(traj3l.end())
-                .forward(15)
+                .back(25)
                 .build();
 
         Trajectory traj5l = drive.trajectoryBuilder(traj4l.end())
-                .strafeRight(10)
+                .strafeRight(16)
                 .build();
         Trajectory traj6l = drive.trajectoryBuilder(traj5l.end())
-                .forward(33)
+                .back(36)
                 .build();
         Trajectory traj7l = drive.trajectoryBuilder(traj6l.end())
                 .strafeLeft(22)
@@ -229,9 +229,8 @@ public class AutonBlueCarouselStates extends LinearOpMode {
 
             }
 
-            sleep(10000);
+            sleep(1000);//Sleep is needed before PID is gracefully completed
             arm.setJoint2(0.7d);
-
 
             drive.followTrajectory(traj2l);
 
@@ -243,7 +242,7 @@ public class AutonBlueCarouselStates extends LinearOpMode {
             arm.setJoint2(joint2TuckPosition);
 
             sleep(1000);
-            ;
+
             armSetpoint = 0; // Come to Base
             contWhileLoop = true;
 
@@ -258,8 +257,6 @@ public class AutonBlueCarouselStates extends LinearOpMode {
                     contWhileLoop = false;
             }
 
-
-            sleep(20000);
             drive.followTrajectory(traj4l);
             drive.followTrajectory(traj5l);
             drive.followTrajectory(traj6l);

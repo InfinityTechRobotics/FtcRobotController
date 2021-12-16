@@ -102,21 +102,23 @@ public class AutonBlueWarehouseStates extends LinearOpMode {
 
 
         Trajectory traj3l = drive.trajectoryBuilder(traj2l.end())
-                .strafeRight(10)
+                .strafeRight(12)
                 .build();
 
         Trajectory traj4l = drive.trajectoryBuilder(traj3l.end())
-                .forward(15)
+                .back(20)
                 .build();
 
         Trajectory traj5l = drive.trajectoryBuilder(traj4l.end())
-                .strafeRight(10)
+                .strafeRight(18)
                 .build();
+
         Trajectory traj6l = drive.trajectoryBuilder(traj5l.end())
-                .forward(30)
+                .back(33)
                 .build();
+
         Trajectory traj7l = drive.trajectoryBuilder(traj6l.end())
-                .strafeLeft(22)
+                .strafeLeft(23)
                 .build();
 ////////////////////////////////////////////////////////////////
         //Middle Level Shipping Traj
@@ -142,10 +144,10 @@ public class AutonBlueWarehouseStates extends LinearOpMode {
                 .strafeRight(18)
                 .build();
         Trajectory traj6m = drive.trajectoryBuilder(traj5m.end())
-                .back(30)
+                .back(33)
                 .build();
         Trajectory traj7m = drive.trajectoryBuilder(traj6m.end())
-                .strafeLeft(22)
+                .strafeLeft(23)
                 .build();
 ////////////////////////////////////////////////////////////////
 
@@ -172,10 +174,10 @@ public class AutonBlueWarehouseStates extends LinearOpMode {
                 .strafeRight(16)
                 .build();
         Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
-                .back(30)
+                .back(33)
                 .build();
         Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
-                .strafeLeft(22)
+                .strafeLeft(23)
                 .build();
 ////////////////////////////////////////////////////
 
@@ -226,7 +228,7 @@ public class AutonBlueWarehouseStates extends LinearOpMode {
 
             }
 
-            sleep(10000);//Sleep is needed before PID is gracefully completed
+            sleep(1000);//Sleep is needed before PID is gracefully completed
             arm.setJoint2(0.7d);
 
             drive.followTrajectory(traj2l);
@@ -239,7 +241,7 @@ public class AutonBlueWarehouseStates extends LinearOpMode {
             arm.setJoint2(joint2TuckPosition);
 
             sleep(1000);
-            ;
+
             armSetpoint = 0; // Come to Base
             contWhileLoop = true;
 
