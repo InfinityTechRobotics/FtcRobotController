@@ -317,11 +317,11 @@ public class AutonRedCarouselStates extends LinearOpMode {
             arm.setWOFPower(-0.8);//Start WOF
 
             drive.followTrajectory(traj7l);
-            sleep(1500);
+            sleep(2000);
 
             drive.followTrajectory(traj8l);
             drive.followTrajectory(traj9l);
-            sleep(1500);
+            sleep(2000);
             arm.setWOFPower(0.0);//Stop WOF
             drive.followTrajectory(traj10l);
             drive.followTrajectory(traj11l);
@@ -371,11 +371,11 @@ public class AutonRedCarouselStates extends LinearOpMode {
             drive.followTrajectory(traj6m);
             arm.setWOFPower(-0.8);//Start WOF
             drive.followTrajectory(traj7m);
-            sleep(1500);
+            sleep(2000);
 
             drive.followTrajectory(traj8m);
             drive.followTrajectory(traj9m);
-            sleep(1500);
+            sleep(2000);
             arm.setWOFPower(0.0);//Stop WOF
             drive.followTrajectory(traj10m);
             drive.followTrajectory(traj11m);
@@ -430,11 +430,11 @@ public class AutonRedCarouselStates extends LinearOpMode {
             arm.setWOFPower(-0.8);//Start WOF
 
             drive.followTrajectory(traj7);
-            sleep(1500);
+            sleep(2000);
 
             drive.followTrajectory(traj8);
             drive.followTrajectory(traj9);
-            sleep(1500);
+            sleep(2000);
             arm.setWOFPower(0.0);//Start WOF
             drive.followTrajectory(traj10);
             drive.followTrajectory(traj11);

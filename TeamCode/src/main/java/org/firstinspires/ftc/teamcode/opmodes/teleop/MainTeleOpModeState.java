@@ -89,7 +89,7 @@ public class MainTeleOpModeState extends LinearOpMode {
             }
             //Game Pad1 - Deliver
             if(gamepad1.a){
-                //CLAW CLOSE
+                //CLAW OPEN
                 arm.setClaw(CLAW_OPEN_POS);
             }
             //Game Pad1 - After Deliver
@@ -105,7 +105,7 @@ public class MainTeleOpModeState extends LinearOpMode {
                 arm.setJoint2(0.6);
             }
 
-            //TO DO
+            //Capping Lower Arm
             if(gamepad1.dpad_down) {
                 //Arm - Grab custom shipping element from floor
                 armSetpoint = 50;
@@ -113,9 +113,15 @@ public class MainTeleOpModeState extends LinearOpMode {
 
             }
 
-            //TO DO
+            //Capping Arm Position
             if(gamepad1.dpad_left) {
                 arm.setJoint2(0.9);
+            }
+
+
+            //Capping Open Claw
+            if(gamepad1.dpad_right) {
+                arm.setClaw(0.5);
             }
 
             //Arm Collect Position inside Robot - Open Claw and bring join2 down
