@@ -211,6 +211,7 @@ public class AutonBlueWarehouseStates extends LinearOpMode {
         if(duckPos=="LEFT"){
             telemetry.addData("Duck Position 111", duckPos);
             telemetry.update();
+            sleep(8000);
 
             drive.followTrajectory(traj1l);
 
@@ -266,6 +267,8 @@ public class AutonBlueWarehouseStates extends LinearOpMode {
             telemetry.addData("Duck Position 2222", duckPos);
             telemetry.update();
 
+            sleep(8000);
+
 
             drive.followTrajectory(traj1m);
 
@@ -319,6 +322,8 @@ public class AutonBlueWarehouseStates extends LinearOpMode {
 
             telemetry.addData("Duck Position 333", duckPos);
             telemetry.update();
+            sleep(8000);
+
             drive.followTrajectory(traj1);
 
             armSetpoint = 230; // move joint1 to level 3 position

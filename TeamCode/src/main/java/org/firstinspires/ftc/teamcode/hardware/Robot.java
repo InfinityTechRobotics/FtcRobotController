@@ -79,9 +79,9 @@ public class Robot {
     public void init(HardwareMap hardwareMap, Telemetry tm) {
 
         // Initialize drive motors
-        frontLeft = hardwareMap.get(DcMotor.class, "lf");
-        frontRight = hardwareMap.get(DcMotor.class, "rf");
-        backLeft = hardwareMap.get(DcMotor.class, "lr");
+        frontLeft = hardwareMap.get(DcMotor.class, "fl");
+        frontRight = hardwareMap.get(DcMotor.class, "fr");
+        backLeft = hardwareMap.get(DcMotor.class, "rl");
         backRight = hardwareMap.get(DcMotor.class, "rr");
 
         frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);

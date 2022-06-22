@@ -224,7 +224,7 @@ public class AutonRedCarouselStates extends LinearOpMode {
                 .build();
 
         Trajectory traj9 = drive.trajectoryBuilder(traj8.end())
-                .back(2)
+                .back(1)
                 .build();
 
         Trajectory traj10 = drive.trajectoryBuilder(traj9.end())
@@ -434,7 +434,7 @@ public class AutonRedCarouselStates extends LinearOpMode {
 
             drive.followTrajectory(traj8);
             drive.followTrajectory(traj9);
-            sleep(2000);
+            sleep(1000);
             arm.setWOFPower(0.0);//Start WOF
             drive.followTrajectory(traj10);
             drive.followTrajectory(traj11);

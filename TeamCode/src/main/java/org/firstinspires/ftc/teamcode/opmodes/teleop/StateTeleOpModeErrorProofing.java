@@ -16,8 +16,8 @@ import org.firstinspires.ftc.teamcode.hardware.Arm;
  * exercise is to ascertain whether the localizer has been configured properly (note: the pure
  * encoder localizer heading may be significantly off if the track width has not been tuned).
  */
-@TeleOp(name = "1-State Practice OpMode")
-public class MainTeleOpModeState extends LinearOpMode {
+@TeleOp(name = "State Practice OpMode error proofed")
+public class StateTeleOpModeErrorProofing extends LinearOpMode {
 
     int armSetpoint = 0;
 
@@ -32,6 +32,7 @@ public class MainTeleOpModeState extends LinearOpMode {
     public static final double CLAW_COLLECT_POS = 0.8d;
     public static final double CLAW_OPEN_POS = 0.8d;
 
+    public static String armPos = "";
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -71,22 +72,29 @@ public class MainTeleOpModeState extends LinearOpMode {
                 //Arm - Transfer Position before going to base
                 arm.setJoint2(0d);
                 armSetpoint = 150;
+                armPos = "tucked";
+
             }
             if(gamepad2.y) {
                 //Arm - Level 1 Position, Shared Shipping Hub
                 armSetpoint = 150;
                 arm.setJoint2(joint2Lev1DeliverPos);
+                armPos = "Shared shipping hub";
+
             }
             if(gamepad2.a) {
                 //Arm - LEVEL 3 Position
                 armSetpoint = 235; // move joint1 to level 3 position
                 arm.setJoint2(joint2Lev3DeliverPos);
+                armPos = "top level";
 
             }
-            if(gamepad2.b) {
+            if(gamepad2.b && armPos.equals("tucked")) {
                 // Arm goes to Tuck Position inside Robot
                 armSetpoint = 0;
+                armPos = "base";
             }
+
             //Game Pad1 - Deliver
             if(gamepad1.a){
                 //CLAW OPEN
@@ -163,6 +171,7 @@ public class MainTeleOpModeState extends LinearOpMode {
             joint1Power = pid.calculate(arm.getJoint1(), armSetpoint);
             arm.setArmJoint1(joint1Power);
 
+            telemetry.addData("arm position", armPos);
             telemetry.addData("Joint Power", joint1Power);
             telemetry.addData("getJoint1", arm.getJoint1());
             telemetry.addData("armSetPoint", armSetpoint);
