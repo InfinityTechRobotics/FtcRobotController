@@ -66,7 +66,6 @@ public class StateTeleOpModeErrorProofing extends LinearOpMode {
             /* Added for arm control on gamepad 2 */
 
             // set arm setpoint
-            // added error proofing to controls
 
             double joint1Power = 0.0;
 
